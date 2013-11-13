@@ -1,11 +1,11 @@
-var gpioPlugin = require('./../../../src/plugins/GpioPlugin/GpioPlugin');
+var gpioPlugin = require(__dirname + '/../../../src/plugins/Gpio/Gpio');
 var assert = require('chai').assert;
 var sinon = require('sinon');
 
 describe('GPIO-tests', function(){
 
 	it("should throw error because one or more options are missing", function() {
-		var gpio = gpioPlugin.GpioPlugin({'GpioPlugin':null});
+		var gpio = gpioPlugin.Gpio({'gpioPlugin':null});
 		var error;
 		//without arguments
 		try {
@@ -46,42 +46,22 @@ describe('GPIO-tests', function(){
 	it("should execute function 'sendOutput' with correct values", function() {
 		//Preparation
 		var onOff = require('onoff').Gpio;
-
-		var gpioMock = {
-			writeSync:function(value) {
-				assert.equal(value,1);
-			},
-			unexport:function() {
-			}
-		};
-
-		var onOffMock = {
-			Gpio:function(pin,direction) {
-				assert.equal(pin,18);
-				assert.equal(direction,'out');
-				return gpioMock;
-			}
-		};
-
-		gpio = gpioPlugin.GpioPlugin({'gpioPlugin':onOffMock});
-
-		var spy1 = sinon.spy(onOffMock, "Gpio");
-		var spy2 = sinon.spy(gpioMock, "writeSync");
-		var spy3 = sinon.spy(gpioMock, "unexport");
+		var spy1 = sinon.spy(onOff.prototype, "writeSync");
+		var spy2 = sinon.spy(onOff.prototype, "unexport");
+		var gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
 
 		//execution
-		gpio.execute({'direction':'out','pin':18,'value':1});
+		gpio.execute({'direction':'out','pin':17,'value':1});
 
 		//assertion
-		assert(spy1.calledOnce, "method Gpio should be called");
-		assert(spy2.calledOnce, "method writeSync should be called");
-		assert(spy3.calledOnce, "method unexport should be called");
+		assert(spy1.calledWith(1), "method writeSync should be called once");
+		assert(spy2.calledOnce, "method unexport should be called once");
 	});
 
+	//TODO
 	it("should check functionality of method 'listenEvents'", function() {
 		//Preparation
 		var eventId = 1234;
-		var onOff = require('onoff').Gpio;
 		var success = false;
 
 		process.on("1234", function(value) {
@@ -90,30 +70,12 @@ describe('GPIO-tests', function(){
 			}
 		});
 
-		var gpioMock = {
-			watch:function(callback) {
-				callback(false, 1);
-			}
-		};
-
-		var onOffMock = {
-			Gpio:function(pin,direction,edge,options) {
-				assert.equal(pin,18);
-				assert.equal(direction,'in');
-				assert.equal(edge,'both');
-				assert.equal(options.persistentWatch,true);
-				return gpioMock;
-			}
-		};
-
-		gpio = gpioPlugin.GpioPlugin({'gpioPlugin':onOffMock});
-
-		var spy1 = sinon.spy(onOffMock, "Gpio");
-		var spy2 = sinon.spy(gpioMock, "watch");
-
+		var onOff = require('onoff').Gpio;
+		var stub = sinon.stub(onOff.prototype, "watch").returns(1);
+		var gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
 
 		//execution
-		gpio.listenEvents(eventId, {'pin':18});
+		assert.equal(gpio.listenEvents(eventId, {'pin':18}),1);
 
 		//assertion
 		assert.equal(success, true, "should return correct event with correct value");
@@ -121,4 +83,37 @@ describe('GPIO-tests', function(){
 		//after test
 		process.removeAllListeners("1234");
 	});
+
+		//TODO
+	/*
+	it("should check functionality of method 'listenEvents'", function() {
+		//Preparation
+		var eventId = 1234;
+		var success = false;
+
+		var stub = sinon.stub(global, "onOff").returns({ watch: function() {
+			console.log("test");
+			return 1;
+		}});
+
+		process.on("1234", function(value) {
+			if(value===1) {
+				success = true;
+			}
+		});
+
+		var onOff = require('onoff').Gpio;
+		//var stub = sinon.stub(onOff.prototype, "watch").returns(1);
+		gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
+
+		//execution
+		assert.equal(gpio.listenEvents(eventId, {'pin':18}),1);
+
+		//assertion
+		assert.equal(success, true, "should return correct event with correct value");
+
+		//after test
+		process.removeAllListeners("1234");
+	});
+*/
 });
