@@ -59,61 +59,16 @@ describe('GPIO-tests', function(){
 	});
 
 	//TODO
-	it("should check functionality of method 'listenEvents'", function() {
+	it("method 'watch' from module 'onOff' should be called in method 'listenEvents'", function() {
 		//Preparation
-		var eventId = 1234;
-		var success = false;
-
-		process.on("1234", function(value) {
-			if(value===1) {
-				success = true;
-			}
-		});
-
 		var onOff = require('onoff').Gpio;
-		var stub = sinon.stub(onOff.prototype, "watch").returns(1);
+		var spy1 = sinon.spy(onOff.prototype, "watch");
+
+		//execution
 		var gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
-
-		//execution
-		assert.equal(gpio.listenEvents(eventId, {'pin':18}),1);
+		gpio.listenEvents(1234, {'pin':18, 'eventEmitter':mock});
 
 		//assertion
-		assert.equal(success, true, "should return correct event with correct value");
-
-		//after test
-		process.removeAllListeners("1234");
+		assert(spy1.calledOnce, "not called 1");
 	});
-
-		//TODO
-	/*
-	it("should check functionality of method 'listenEvents'", function() {
-		//Preparation
-		var eventId = 1234;
-		var success = false;
-
-		var stub = sinon.stub(global, "onOff").returns({ watch: function() {
-			console.log("test");
-			return 1;
-		}});
-
-		process.on("1234", function(value) {
-			if(value===1) {
-				success = true;
-			}
-		});
-
-		var onOff = require('onoff').Gpio;
-		//var stub = sinon.stub(onOff.prototype, "watch").returns(1);
-		gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
-
-		//execution
-		assert.equal(gpio.listenEvents(eventId, {'pin':18}),1);
-
-		//assertion
-		assert.equal(success, true, "should return correct event with correct value");
-
-		//after test
-		process.removeAllListeners("1234");
-	});
-*/
 });
