@@ -66,7 +66,7 @@ describe('GPIO-tests', function(){
 
 		//execution
 		var gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
-		gpio.listenEvents(1234, {'pin':18, 'eventEmitter':mock});
+		gpio.listenEvents(1234, {'pin':18});
 
 		//assertion
 		assert(spy1.calledOnce, "not called 1");
