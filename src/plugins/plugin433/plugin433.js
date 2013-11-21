@@ -53,14 +53,13 @@ function getSendCommand(grpId, deviceId, onOffCommand) {
 	return "sudo " + pathToSendCommand + " " + grpId + " " + deviceId + " " + onOffCommand;
 }
 
-function listenEvents(eventId, opts) {
+function listenEvent(eventId, opts) {
 	//TODO
 }
 
 
-// If we're running under Node, 
 if(typeof exports !== 'undefined') {
 	exports.execute = execute;
 	exports.plugin433 = plugin433;
-	exports.listenEvents = listenEvents;
+	exports.listenEvent = listenEvent;
 }

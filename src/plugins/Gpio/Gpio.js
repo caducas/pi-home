@@ -63,11 +63,11 @@ function sendOutput(pin, value) {
 /**
 * This method listens on a GPIO pin and throws events with eventId when value of pin changes.
 *
-* @method listenEvents
+* @method listenEvent
 * @param {int} eventId The eventId like configured in event config.
 * @param {opts} opts The opts must contain 'pin' on which should be listened.
 */
-function listenEvents(eventId, opts) {
+function listenEvent(eventId, opts) {
 	if(!opts.pin) {
 		throw new Error("option 'pin' is missing");
 	}
@@ -83,5 +83,5 @@ if(typeof exports !== 'undefined') {
 	exports.execute = execute;
 	exports.Gpio = Gpio;
 	exports.sendOutput = sendOutput;
-	exports.listenEvents = listenEvents;
+	exports.listenEvent = listenEvent;
 }

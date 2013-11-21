@@ -56,7 +56,6 @@ function setPath(newPath) {
 	path = newPath;
 }
 
-// If we're running under Node, 
 if(typeof exports !== 'undefined') {
 	exports.getListOfPlugins = getListOfPlugins;
 	exports.getListOfPluginNames = getListOfPluginNames;

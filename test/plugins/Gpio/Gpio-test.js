@@ -59,14 +59,14 @@ describe('GPIO-tests', function(){
 	});
 
 	//TODO
-	it("method 'watch' from module 'onOff' should be called in method 'listenEvents'", function() {
+	it("method 'watch' from module 'onOff' should be called in method 'listenEvent'", function() {
 		//Preparation
 		var onOff = require('onoff').Gpio;
 		var spy1 = sinon.spy(onOff.prototype, "watch");
 
 		//execution
 		var gpio = gpioPlugin.Gpio({'gpioPlugin':onOff});
-		gpio.listenEvents(1234, {'pin':18});
+		gpio.listenEvent(1234, {'pin':18});
 
 		//assertion
 		assert(spy1.calledOnce, "not called 1");
