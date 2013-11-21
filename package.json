@@ -12,6 +12,7 @@
     "sinon": "~1.7.3",
     "grunt-contrib-jshint": "~0.7.1",
     "chai": "*",
-    "onoff": "~0.2.3"
+    "onoff": "~0.2.3",
+    "json-socket": "~0.1.2"
   }
 }
