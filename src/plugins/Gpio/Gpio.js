@@ -73,8 +73,20 @@ function listenEvent(eventId, opts) {
 	}
 	var listenPort = new onOff(opts.pin, 'in', 'both', {persistentWatch: true});
 
+	// listenPort.watch(function(err, value) {
+	// 	process.emit(eventId+'', value);
+	// });
+
+	listenOnPort(eventId, listenPort);
+}
+
+function listenOnPort(eventId, listenPort) {
 	listenPort.watch(function(err, value) {
-		process.emit(eventId+'', value);
+		listenPort.unwatch();
+		setTimeout(function() {
+			process.emit(eventId+'', listenPort.readSync());
+			listenOnPort(eventId, listenPort);
+		},20);
 	});
 }
 

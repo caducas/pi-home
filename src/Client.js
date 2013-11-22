@@ -7,9 +7,18 @@
 var networkCommunicator = require(__dirname + '/NetworkCommunicator');
 var taskExecutor = require(__dirname + '/TaskExecutor');
 var eventHelper = require(__dirname + '/EventHelper');
+var ip = '127.0.0.1';
+var port = 6969;
+
+if(process.argv[2] != null) {
+	ip = process.argv[2];
+}
+if(process.argv[3] != null) {
+	ip = process.argv[3];
+}
 
 //connects to server over network
-networkCommunicator.startClient();
+networkCommunicator.startClient(ip,port);
 
 //Event for executing a Task (when server sends command to start task)
 process.on('#executeTask', function(task) {

@@ -39,6 +39,7 @@ function getListOfPlugins() {
 * This method is used to get a specific plugin.
 *
 * @method getPlugin
+* @param {String} pluginName The name of the needed plugin.
 * @return {Object} The plugin.
 */
 function getPlugin(pluginName) {

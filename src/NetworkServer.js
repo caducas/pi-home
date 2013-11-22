@@ -1,7 +1,7 @@
 /**
-* This module is used to handle tasks. It uses PluginHelper to load correct plugin and executes the 'execute' method of the plugin with params.
+* This module used to handle the network communication on server side.
 *
-* @class TaskExecutor
+* @class NetworkServer
 */
 
 var net = require('net');
@@ -9,8 +9,12 @@ var JsonSocket = require('json-socket');
 
 var clients = [];
 
+/**
+* This method is used to start a server.
+*
+* @method startServer
+*/
 function startServer() {
-	//var ip = '127.0.0.1';
 	var port = 6969;
 	var server = net.createServer();
 
@@ -23,17 +27,22 @@ function startServer() {
 
 		process.emit('#clientConnected',clientIp);
 
-
 		socket.on('message', function(message) {
 	        console.log('DATA received from ' + clientIp + ': ' + message);
 	        if(message.command === 'event') {
 				process.emit('#eventCatched', message);
 	        }   
 		});
-
 	});
 }
 
+/**
+* This method is used send a message from the server to a client with given ip address.
+*
+* @method sendMessage
+* @param {String} recipient The ip address of the target client.
+* @param {Object} message The JSON object to send.
+*/
 function sendMessage(recipient,message) {
 	clients[recipient].sendMessage(message);
 }
