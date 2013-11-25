@@ -5,6 +5,7 @@
 */
 var networkCommunicator = require(__dirname + '/NetworkCommunicator');
 var eventConfig = require(__dirname + '/../config/config.json');
+var dbHelper = require(__dirname + '/DBHelper');
 
 //starts network server to enable clients to connect
 networkCommunicator.startServer();
@@ -24,12 +25,13 @@ process.on('#clientConnected', function(ip) {
 
 	console.log("sending config to client");
 
-	var configObject = {
-		"command" : "config",
-		"params" : eventConfig[ip]
-	}
-
-	networkCommunicator.sendToClient(ip,configObject);
+	dbHelper.getEventConfig(ip, function(ip, config) {
+		var configObject = {
+			"command" : "config",
+			"params" : config
+		};
+		networkCommunicator.sendToClient(ip,configObject);
+	});
 });
 
 //Event when client sends an event to the server
@@ -52,7 +54,7 @@ process.on('#eventCatched', function(catchedEvent) {
 	var exampleTask2 = {
 		"command" : "executeTask",
 		"params" : {
-			"taskId" : "SwitchOnLED",
+			"taskId" : "SwitchOffLED",
 			"host" : "127.0.0.1",
 			"plugin" : "Gpio",
 			"params" : {

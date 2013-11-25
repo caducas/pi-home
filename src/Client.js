@@ -10,10 +10,10 @@ var eventHelper = require(__dirname + '/EventHelper');
 var ip = '127.0.0.1';
 var port = 6969;
 
-if(process.argv[2] != null) {
+if(process.argv[2] !== null) {
 	ip = process.argv[2];
 }
-if(process.argv[3] != null) {
+if(process.argv[3] !== null) {
 	ip = process.argv[3];
 }
 

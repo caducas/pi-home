@@ -16,7 +16,7 @@ var conditionHelper = require(__dirname + '/ConditionHelper');
 */
 function startListeners(eventConfig) {
 
-	var events = eventConfig.events;
+	var events = eventConfig;
 
 	for (var eventPos in events) {
 

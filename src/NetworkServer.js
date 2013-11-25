@@ -21,17 +21,17 @@ function startServer() {
 	server.listen(port);
 	server.on('connection', function(socket) {
 		var clientIp = socket.remoteAddress;
-	    console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
+		console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort);
 		socket = new JsonSocket(socket);
 		clients[clientIp] = socket;
 
 		process.emit('#clientConnected',clientIp);
 
 		socket.on('message', function(message) {
-	        console.log('DATA received from ' + clientIp + ': ' + message);
-	        if(message.command === 'event') {
+			console.log('DATA received from ' + clientIp + ': ' + message);
+			 if(message.command === 'event') {
 				process.emit('#eventCatched', message);
-	        }   
+			}
 		});
 	});
 }

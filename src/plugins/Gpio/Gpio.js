@@ -73,13 +73,10 @@ function listenEvent(eventId, opts) {
 	}
 	var listenPort = new onOff(opts.pin, 'in', 'both', {persistentWatch: true});
 
-	// listenPort.watch(function(err, value) {
-	// 	process.emit(eventId+'', value);
-	// });
-
 	listenOnPort(eventId, listenPort);
 }
 
+//after value change on listener port was noticed, listener gets deactivated for 20 ms (to not call listener more than once)
 function listenOnPort(eventId, listenPort) {
 	listenPort.watch(function(err, value) {
 		listenPort.unwatch();

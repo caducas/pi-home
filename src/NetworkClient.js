@@ -19,7 +19,7 @@ function startClient(serverIp, port) {
 	client = new JsonSocket(new net.Socket());
 
 	client.connect(port, serverIp, function() {
-	    console.log('CONNECTED client TO: ' + serverIp + ':' + port);
+		console.log('CONNECTED client TO: ' + serverIp + ':' + port);
 	});
 
 	client.on('data', function(data) {
@@ -33,13 +33,15 @@ function startClient(serverIp, port) {
 
 		if(message.command==='config') {
 			console.log("start listeners command received!");
+			console.log('message');
+			console.log(message);
 			process.emit('#config', message.params);
 		}
 	});
 
 	client.on('close', function() {
-	    console.log('Connection closed');
-	    client.end();
+		console.log('Connection closed');
+		client.end();
 	});
 }
 

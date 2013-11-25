@@ -9,8 +9,8 @@ describe('EventHelper', function(){
 	var conditionHelper = require(__dirname + '/../src/ConditionHelper');
 	var eventHelper = require(__dirname + '/../src/EventHelper');
 	var networkCommunicator = require(__dirname + '/../src/NetworkCommunicator');
-	var eventConfig = {
-		"events" : [
+	var eventConfig = 
+		[
 			{
 				"plugin" : "Gpio",
 				"listeners" : [
@@ -38,10 +38,8 @@ describe('EventHelper', function(){
 					}
 				]
 			}
-		],
-		"tasks" : [
 		]
-	};
+	;
 
 	beforeEach(function() {
 		pluginHelper.setPath(__dirname + '/../src/plugins/');
