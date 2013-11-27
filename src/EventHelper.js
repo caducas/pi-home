@@ -22,25 +22,28 @@ function startListeners(eventConfig) {
 
 		var pluginEvent = events[eventPos];
 
-		var plugin = pluginHelper.getPlugin(pluginEvent.plugin);
+		if(pluginEvent.plugin !== "UI") {
 
-		for (var listenerPos in pluginEvent.listeners) {
-			var listener = pluginEvent.listeners[listenerPos];
+			var plugin = pluginHelper.getPlugin(pluginEvent.plugin);
 
-			plugin.listenEvent(listener.listenerName, listener.params);
+			for (var listenerPos in pluginEvent.listeners) {
+				var listener = pluginEvent.listeners[listenerPos];
 
-			process.on(listener.listenerName, function(value) {
+				plugin.listenEvent(listener.listenerName, listener.params);
 
-				for (var conditionPos in listener.events) {
-					var condition = listener.events[conditionPos];
+				process.on(listener.listenerName, function(value) {
 
-					//check condition
-					if(conditionHelper.checkCondition(value, condition.condition)) {
-						var jsonObjectToSend = {"command" : "event", "listener" : listener.listenerName, "condition" : condition.conditionName};
-						networkCommunicator.sendToServer(jsonObjectToSend);
+					for (var conditionPos in listener.events) {
+						var condition = listener.events[conditionPos];
+
+						//check condition
+						if(conditionHelper.checkCondition(value, condition.condition)) {
+							var jsonObjectToSend = {"command" : "event", "listener" : listener.listenerName, "condition" : condition.conditionName};
+							networkCommunicator.sendToServer(jsonObjectToSend);
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 }

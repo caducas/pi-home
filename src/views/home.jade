@@ -1,0 +1,14 @@
+doctype 5
+html
+   head
+      title= title
+      link(rel='stylesheet', href='/css/bootstrap.css')
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+      script(src="/socket.io/socket.io.js")
+      script(src='/javascripts/script.js')
+   body
+      div.container
+         header
+            h1 Test button - it should activate the physical Switch (to switch on/off power adapter and LED) for 5 seconds
+         button(class="btn btn-success", onclick="turnOnLight()").
+            Turn on light!
