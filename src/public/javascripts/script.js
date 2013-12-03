@@ -1,4 +1,3 @@
-alert("Test");
 var socket = io.connect();
 
 function showTest() {
@@ -11,7 +10,6 @@ function activatePhysicalButton() {
 }
 
 $(document).ready(function(){
-   $("#testSet").click(function() {showTest();});
 });
 
 

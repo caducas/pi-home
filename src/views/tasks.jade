@@ -1,20 +1,36 @@
 doctype 5
 html
    head
-      title Tasks
+      title= Tasks
       link(rel='stylesheet', href='/css/bootstrap.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
-      script(src="/javascripts/tasks.js")
    body
+      include navigation
       div.container
-         header
-            h1 Tasks
-         input(type='text')#testInput
-         button#testSet Test input
-         div
-            table
-               thead
-                  tr: th Tasks
-               tbody#taskList
-         div#taskConfig
+         div#taskList
+         div(class='col-lg-6')#taskConfig
+            div(class='well')
+               form(class='bs-example form-horizontal')
+                  fieldset
+                     legend Configuration
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtTaskId') TaskId
+                        div(class='col-lg-10')
+                           input(type='text' id='txtTaskId' value='' class='form-control')
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtHost') Host-IP
+                        div(class='col-lg-10')
+                           input(type='text' id='txtHost' value='' class='form-control')
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtPlugin') Plugin-Name
+                        div(class='col-lg-10')
+                           div#plugin
+                     div#taskConfigParams
+                     div#taskConfigParamsAdd
+                        include plugins
+                     div(class='form-group')
+                        div(class='col-lg-10')
+                           input(type='button' class='btn btn-default' value='Save')#saveTaskConfig
+                           input(type='button' class='btn btn-default' value='Cancel')#cancelTaskConfig
+   script(src="/javascripts/tasks.js")

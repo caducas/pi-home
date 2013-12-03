@@ -56,6 +56,7 @@ function execute(opts) {
 */
 function sendOutput(pin, value) {
 		var gpioPin = new onOff(pin, 'out');
+		console.log("should turn " + value);
 		gpioPin.writeSync(value);
 		gpioPin.unexport();
 }

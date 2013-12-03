@@ -44,6 +44,7 @@ function startServer() {
 * @param {Object} message The JSON object to send.
 */
 function sendMessage(recipient,message) {
+	console.log(message);
 	clients[recipient].sendMessage(message);
 }
 

@@ -1,0 +1,35 @@
+doctype 5
+html
+   head
+      title= Tasks
+      link(rel='stylesheet', href='/css/bootstrap.css')
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+      script(src="/socket.io/socket.io.js")
+   body
+      include navigation
+      div.container
+         div#taskGroupList
+         div#addNewTaskGroup
+            input(type='button' class='btn btn-default' value='New TaskGroup')#newTaskGroup
+         div(class='col-lg-6')#taskGroupConfig
+            div(class='well')
+               form(class='bs-example form-horizontal')
+                  fieldset  
+                     legend Configuration
+                        input(type='button' class='btn btn-default pull-right' value='Remove')#removeTaskGroup
+                        input(type='button' class='btn btn-default pull-right' value='Save')#saveTaskGroupConfig
+                        input(type='button' class='btn btn-default pull-right' value='Cancel')#cancelTaskGroupConfig
+                     div(class='form-group')
+                        label(class='col-lg-3 control-label' for='txtTaskGroupId') Taskgroup-ID
+                        div(class='col-lg-10')
+                           input(type='text' id='txtTaskGroupId' value='' class='form-control')
+                     legend Tasks
+                        div#taskList
+                        div(class='col-lg-10')
+                           div(class='col-lg-3')
+                              input(type='button' class='btn btn-default' value='Remove')#removeFromTaskList
+                           div(class='col-lg-9 pull-right')
+                              div#unassignedTaskList
+                              input(type='button' class='btn btn-default pull-right' value='Add')#addToTaskList
+
+   script(src="/javascripts/taskgroups.js")
