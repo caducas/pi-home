@@ -43,8 +43,19 @@ function getListOfPlugins() {
 * @return {Object} The plugin.
 */
 function getPlugin(pluginName) {
+	console.log(path+pluginName+'/'+pluginName);
 	plugin = require(path+pluginName+'/'+pluginName);
+	console.log('plugin');
+	console.log(plugin);
 	return plugin;
+}
+
+function getPluginAsync(pluginName, callback) {
+	console.log('should load plugin with name '+pluginName);
+	console.log(path+pluginName+'/'+pluginName);
+	plugin = require(path+pluginName+'/'+pluginName, function(result) {
+		callback(result);
+	});
 }
 
 /**
@@ -62,4 +73,5 @@ if(typeof exports !== 'undefined') {
 	exports.getListOfPluginNames = getListOfPluginNames;
 	exports.getPlugin = getPlugin;
 	exports.setPath = setPath;
+	exports.getPluginAsync = getPluginAsync;
 }

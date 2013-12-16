@@ -54,7 +54,46 @@ function getSendCommand(grpId, deviceId, onOffCommand) {
 }
 
 function listenEvent(eventId, opts) {
-	//TODO
+	console.log('plugin 433 listen event');
+	console.log("eventId");
+	console.log(eventId);
+	console.log('opts');
+	console.log(opts);
+	if(opts==='undefined') {
+		throw new Error("arguments for execute missing");
+	}
+	if(!opts.pin) {
+		throw new Error("option 'port' is missing");
+	}
+	console.log('should start listener for plugin433');
+	var pin = 3;
+
+	var path = "sudo "+__dirname + '/receive' + " -p " + pin;
+	var executor = shellExecutor.exec(path,function(error, stdout, stderr){
+	});
+	listenForInput(executor, eventId);
+
+}
+
+function listenForInput(executor, eventId) {
+	var block = false;
+	executor.stdout.on('data', function(buf) {
+		if(!block) {
+			block = true;
+			setTimeout(function() {
+				block=false;
+			},500);
+
+			var result = String(buf);
+			if(result.substring(0,5) === 'event') {
+				console.log('Event emit:' + result.substring(5,result.indexOf("\n")));
+				process.emit(eventId+'', eventId, result.substring(5,result.indexOf("\n")));
+			}
+		} else {
+			var result = String(buf);
+			console.log("not");
+		}
+	});
 }
 
 

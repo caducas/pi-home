@@ -82,7 +82,7 @@ function listenOnPort(eventId, listenPort) {
 	listenPort.watch(function(err, value) {
 		listenPort.unwatch();
 		setTimeout(function() {
-			process.emit(eventId+'', listenPort.readSync());
+			process.emit(eventId+'', eventId, listenPort.readSync());
 			listenOnPort(eventId, listenPort);
 		},20);
 	});

@@ -33,7 +33,7 @@ function startClient(serverIp, port) {
 			process.emit('#executeTask', message.params);
 		}
 
-		if(message.command==='config') {
+		if(message.command==='configEventListeners') {
 			console.log("start listeners command received!");
 			console.log('message');
 			console.log(message);

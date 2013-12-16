@@ -9,6 +9,8 @@ html
       include navigation
       div.container
          div#eventList
+         div#addNewEvent
+            input(type='button' class='btn btn-default' value='New event')#addNewEvent
          div(class='col-lg-6')#eventGroupConfig
             div(class='well')
                form(class='bs-example form-horizontal')
@@ -23,27 +25,15 @@ html
                         div(class='col-lg-8')
                            input(type='text' id='txtListenerIp' value='' class='form-control')
                      div(class='form-group')
+                        label(class='col-lg-3 control-label' for='txtListenerVariable') Variable
+                        div(class='col-lg-8')
+                           input(type='text' id='txtListenerVariable' value='' class='form-control')
+                     div(class='form-group')
                         label(class='col-lg-3 control-label' for='txtListenerPlugin') Plugin
                         div(class='col-lg-8')
                            div#plugin
                      legend Conditions
                      div#conditionList
-                        table(class='table table-striped table-bordered table-hover')
-                           tbody
-                              tr
-                                 td
-                                    input(type='text' id='inputListenerName' value='' class='form-control')
-                                 td
-                                    select(class='form-control pull-right' id='selectConditionOperator')
-                                       option =
-                                       option >
-                                       option <
-                                       option >=
-                                       option <=
-                                 td
-                                    input(type='text' id='inputConditionValue' value='' class='form-control')
-                                 td
-                                    input(type='button' class='btn btn-default' value='Add' onclick='addCondition()')
                      legend Plugin-Params
                      div#pluginParams
                         include plugins/eventListener

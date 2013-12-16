@@ -32,20 +32,33 @@ process.on('#clientConnected', function(ip) {
 	console.log("sending config to client");
 
 	dbHelper.getEventConfig(ip, function(ip, config) {
+		console.log("config");
+		console.log(config);
 		var configObject = {
-			"command" : "config",
+			"command" : "configEventListeners",
 			"params" : config
 		};
+		// console.log(configObject);
 		networkCommunicator.sendToClient(ip,configObject);
+	});
+});
+
+process.on('#uiEventCatched', function(id) {
+	dbHelper.getEvent(id, function(result) {
 	});
 });
 
 //Event when client sends an event to the server
 process.on('#eventCatched', function(catchedEvent) {
 
-	var eventCondition = catchedEvent.condition;
-
 	console.log('event catched:' + catchedEvent.listener + ' condition:' + catchedEvent.condition);
+
+	checkEventForEventGroupsSuccess(catchedEvent);
+
+});
+
+
+function checkEventForEventGroupsSuccess(catchedEvent) {
 
 	var now = new Date();
 
@@ -101,7 +114,11 @@ process.on('#eventCatched', function(catchedEvent) {
 										"command" : "executeTask",
 										"params" : taskConfig
 									};
-									networkCommunicator.sendToClient(taskConfig.host,configObject);
+									if(taskConfig.plugin!=='UI') {
+										networkCommunicator.sendToClient(taskConfig.host,configObject);
+									} else {
+										frontend.executeTask(taskConfig);
+									}
 
 								});
 							}
@@ -113,7 +130,7 @@ process.on('#eventCatched', function(catchedEvent) {
 		}
 	});
 
-});
+}
 
 if(typeof exports !== 'undefined') {
 	exports.setEventConfig = setEventConfig;

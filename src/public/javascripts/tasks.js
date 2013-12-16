@@ -5,10 +5,74 @@ function configureTask(taskId) {
 	socket.emit('getTaskConfig',taskId);
 }
 
+function createNewTask() {
+	activeTaskConfig = {
+		"taskId" : "",
+		"host" : "127.0.0.1",
+		"plugin" : "Gpio",
+		"params" : {
+		}
+	};
+	refreshTaskConfig();
+}
+
+function removeTask() {
+	socket.emit('removeTask', activeTaskConfig._id);	
+}
+
+function refreshTaskConfig() {
+	document.getElementById("txtTaskId").value = activeTaskConfig.taskId;
+	document.getElementById("txtHost").value = activeTaskConfig.host;
+	document.getElementById("pluginList").value = activeTaskConfig.plugin;
+
+	refreshPluginParams();
+
+	$("#taskConfig").show();
+}
+
+function pluginChanged() {
+	activeTaskConfig.plugin = document.getElementById('pluginList').value;
+	activeTaskConfig.params = {};
+	
+	var elements = [];
+	elements.push(document.getElementsByTagName("input"));
+	elements.push(document.getElementsByTagName("select"));
+
+	var result = [];
+	var checkString = "setting_"+activeTaskConfig.plugin;
+	for(var i in elements) {
+		var element = elements[i];
+		for(var i in element) {
+			var elementsId = element[i].id;
+			if(elementsId !== undefined && elementsId.slice(0,checkString.length)===checkString) {
+				var paramName = elementsId.slice(-((elementsId.length-(checkString.length+1))));
+				activeTaskConfig.params[paramName] = "test";
+			}
+		}
+	}
+
+	refreshPluginParams();
+}
+
+function refreshPluginParams() {
+
+	$('div[id^=params_]').filter(function() {
+		return /^params_/.test(this.id);
+	}).each(function() {
+		$("#"+this.id).hide();
+	});
+
+	for(var i in activeTaskConfig.params) {
+		console.log(i);
+		document.getElementById("setting_"+activeTaskConfig.plugin+"_"+i).value = activeTaskConfig.params[i];
+	}
+
+	$("#params_"+activeTaskConfig.plugin).show();
+}
+
 function saveTaskConfig() {
 	activeTaskConfig.taskId = document.getElementById('txtTaskId').value;
 	activeTaskConfig.host = document.getElementById('txtHost').value;
-	activeTaskConfig.plugin = document.getElementById('pluginList').value;
 
 	for (var i in activeTaskConfig.params) {
 		activeTaskConfig.params[i] = document.getElementById("setting_"+activeTaskConfig.plugin+"_"+i).value;
@@ -24,7 +88,7 @@ function cancelTaskConfig() {
 
 function refreshPluginList(pluginList) {
 
-    var pluginListHtml = '<select class="form-control" id="pluginList">';
+    var pluginListHtml = '<select class="form-control" id="pluginList" onchange="pluginChanged()">';
     for(var i in pluginList) {
     	pluginListHtml += '<option>'+pluginList[i]+'</option>';
     }
@@ -52,30 +116,20 @@ socket.on('taskIdList', function(data) {
 
 socket.on('getTaskConfigResult', function(result) {
 	activeTaskConfig = result;
-	document.getElementById("txtTaskId").value = activeTaskConfig.taskId;
-	document.getElementById("txtHost").value = activeTaskConfig.host;
-	document.getElementById("pluginList").value = activeTaskConfig.plugin;
 
-	$('div[id^=params_]').filter(function() {
-		return /^params_/.test(this.id);
-	}).each(function() {
-		$("#"+this.id).hide();
-	});
+	refreshTaskConfig();
+});
 
-
-	$("#taskConfig").show();
-
-	for(var i in activeTaskConfig.params) {
-		document.getElementById("setting_"+activeTaskConfig.plugin+"_"+i).value = activeTaskConfig.params[i];
-	}
-
-	$("#params_"+activeTaskConfig.plugin).show();
-
+socket.on('removedTask', function() {
+	activeTaskConfig = null;
+	$("#taskConfig").hide();
 });
 
 $(document).ready(function(){
    $("#saveTaskConfig").click(function() {saveTaskConfig();});
    $("#cancelTaskConfig").click(function() {cancelTaskConfig();});
+   $('#addNewTask').click(function() {createNewTask();});
+   	$('#removeTaskConfig').click(function() {removeTask();});
 	$("#taskConfig").hide();
    // $("#saveTaskConfig").hide();
 });

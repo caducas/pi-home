@@ -1,0 +1,38 @@
+doctype 5
+html
+   head
+      title= Tasks
+      link(rel='stylesheet', href='/css/bootstrap.css')
+      script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+      script(src="/socket.io/socket.io.js")
+   body
+      include navigation
+      div.container
+         div#frontpageItemList
+         div#addNewFrontpageItem
+            input(type='button' class='btn btn-default' value='New Frontpage item')#newFrontpageItem
+         div(class='col-lg-6')#frontpageItemConfig
+            div(class='well')
+               form(class='bs-example form-horizontal')
+                  fieldset
+                     legend Configuration
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtName') Name
+                        div(class='col-lg-10')
+                           input(type='text' id='txtName' value='' class='form-control')
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtDescription') Description
+                        div(class='col-lg-10')
+                           input(type='text' id='txtDescription' value='' class='form-control')
+                     div(class='form-group')
+                        label(class='col-lg-2 control-label' for='txtType') Type
+                        div(class='col-lg-10')
+                           select(class='form-control' id='selectType' onchange='typeChanged()')
+                              option button
+                              option label
+                     div#frontpageItemParams
+                     div(class='form-group')
+                        div(class='col-lg-10')
+                           input(type='button' class='btn btn-default' value='Save')#saveFrontpageItemConfig
+                           input(type='button' class='btn btn-default' value='Cancel')#cancelFrontpageItemConfig
+   script(src="/javascripts/frontpageconfig.js")

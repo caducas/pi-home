@@ -3,13 +3,13 @@
  * Module dependencies.
  */
 
+
+//variable declaration
 var express = require('express');
 var http = require('http');
 var path = require('path');
-
 var dbHelper = require(__dirname + '/DBHelper');
 var pluginHelper = require(__dirname + '/PluginHelper');
-
 var app = express();
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
@@ -31,40 +31,91 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+
+//for frontpage
 app.get('/', function(req, res){
   res.render('home.jade');
-
 	io.sockets.once('connection', function (socket) {
+
+		//loading frontpage
+		dbHelper.getFrontpageItems(function(res) {
+			socket.emit('getFrontpageItems', res);
+		});
+
 		socket.on("activatePhysicalButton", function() {
 			process.emit('#eventCatched', {"listener":"UIButton01","condition":"pressed"});
+		});
+
+		socket.on("uiEvent", function(name) {
+			dbHelper.getUIEvent(name, function(result) {
+				process.emit('#eventCatched', result);
+			});
+		});
+
+	});
+});
+
+//for configuration page of frontend
+app.get('/frontpageconfig', function(req, res) {
+	res.render('frontpageconfig.jade');
+	io.sockets.once('connection', function (socket) {
+		dbHelper.getFrontpageItemsList(function(res) {
+			socket.emit('getFrontpageItemList', res);
+		});
+
+		socket.on("getFrontpageItemConfig", function(id) {
+			dbHelper.getFrontpageItem(id, function(config) {
+				socket.emit('getFrontpageItemConfigResult', config);
+			});
+		});
+
+		socket.on("updateFrontpageItemConfig", function(config) {
+			dbHelper.updateFrontpageItemConfig(config, function() {
+				dbHelper.getFrontpageItemsList(function(res) {
+					socket.emit('getFrontpageItemList', res);
+				});
+			});
 		});
 	});
 });
 
+//for configuration page of tasks
 app.get('/tasks', function(req, res){
   	res.render('tasks.jade');
 	io.sockets.once('connection', function (socket) {
 
 		dbHelper.getTaskList(function(res) {
 			socket.emit('taskIdList', res);
+			socket.emit('getAvailablePlugins', pluginHelper.getListOfPluginNames());
 		});
 
 		socket.on("getTaskConfig", function(taskId) {
 			socket.emit('getAvailablePlugins', pluginHelper.getListOfPluginNames());
 			dbHelper.getTaskConfig(taskId, function(taskConfig) {
-				console.log("Test");
 				socket.emit('getTaskConfigResult', taskConfig);
 			});
-
 		});
 
 		socket.on("updateTaskConfig", function(taskConfig) {
 			dbHelper.updateTaskConfig(taskConfig, function() {
+				dbHelper.getTaskList(function(res) {
+					socket.emit('taskIdList', res);
+				});
+			});
+		});
+
+		socket.on("removeTask", function(taskId) {
+			dbHelper.removeTaskConfig(taskId, function() {
+				socket.emit('removedTask');
+				dbHelper.getTaskList(function(res) {
+					socket.emit('taskIdList', res);
+				});
 			});
 		});
 	});
 });
 
+//for configuration page of events
 app.get('/events', function(req, res){
   	res.render('events.jade');
 	io.sockets.once('connection', function (socket) {
@@ -74,26 +125,30 @@ app.get('/events', function(req, res){
 		});
 
 		socket.on("getEventConfig", function(eventId) {
-			// socket.emit('getAvailablePlugins', pluginHelper.getListOfPluginNames());
+			socket.emit('getAvailablePlugins', pluginHelper.getListOfPluginNames());
 			dbHelper.getEventListenerConfig(eventId, function(eventListenerConfig) {
-				console.log(eventListenerConfig);
 				socket.emit('getEventListenerConfigResult', eventListenerConfig);
 			});
 
 		});
 
 		socket.on("updateEventListenerConfig", function(eventListenerConfig) {
-			console.log(1);
 			dbHelper.updateEventListenerConfig(eventListenerConfig, function() {
-				console.log(2);
 				dbHelper.getEventListenerNames(function(res) {
 					socket.emit('listenerNamesList', res);
 				});
 			});
 		});
+
+		socket.on("getUIEventElements", function() {
+			dbHelper.getUIEventNames(function(res) {
+				socket.emit('getUIEventElementsResult', res);
+			});
+		});
 	});
 });
 
+//for configuration page of eventgroups
 app.get('/eventgroups', function(req, res){
   	res.render('eventgroups.jade');
 	io.sockets.once('connection', function (socket) {
@@ -121,11 +176,8 @@ app.get('/eventgroups', function(req, res){
 		});
 
 		socket.on("updateEventGroupConfig", function(eventGroupConfig) {
-			console.log(1);
 			dbHelper.updateEventGroupConfig(eventGroupConfig, function() {
-				console.log(2);
 				dbHelper.getEventGroupList(function(res) {
-					console.log(3);
 					socket.emit('eventGroupsIdList', res);
 				});
 			});
@@ -149,6 +201,7 @@ app.get('/eventgroups', function(req, res){
 	});
 });
 
+//for configuration page of taskgroups
 app.get('/taskgroups', function(req, res){
   	res.render('taskgroups.jade');
 	io.sockets.once('connection', function (socket) {
@@ -167,11 +220,8 @@ app.get('/taskgroups', function(req, res){
 			});
 
 			socket.on("updateTaskGroupConfig", function(taskGroupConfig) {
-				console.log(1);
 				dbHelper.updateTaskGroupConfig(taskGroupConfig, function() {
-					console.log(2);
 					dbHelper.getTaskGroupList(function(res) {
-						console.log(3);
 						socket.emit('taskGroupsIdList', res);
 					});
 				});
@@ -194,29 +244,6 @@ app.get('/taskgroups', function(req, res){
 			
 	});
 });
-
-
-
-// function startButtonListeners(socket, listeners) {
-// 	for(var pos in listeners) {
-// 		console.log("Starts listener for " + listeners[pos].listenerName);
-// 		console.log('listeners[pos].uiType');
-// 		console.log(listeners[pos].uiType);
-// 		if(listeners[pos].uiType === "button") {
-// 			console.log('listeners[pos].listenerName');
-// 			console.log(listeners[pos].listenerName);
-// 			socket.on(listeners[pos].listenerName, function() {
-// 				console.log("event catched");
-// 				process.emit('#eventCatched', {"listener" : listeners[pos].listenerName, "condition" : "pressed"});
-// 			});
-// 		}
-// 	}
-// }
-
-// app.get('/taskConfig/:taskId', function(req, res) {
-// 	res.render('task.jade', {taskId: req.params.taskId});
-
-// })
 
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

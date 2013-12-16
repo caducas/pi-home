@@ -9,6 +9,8 @@ html
       include navigation
       div.container
          div#taskList
+         div#addNewTask
+            input(type='button' class='btn btn-default' value='New task')#addNewTask
          div(class='col-lg-6')#taskConfig
             div(class='well')
                form(class='bs-example form-horizontal')
@@ -28,9 +30,10 @@ html
                            div#plugin
                      div#taskConfigParams
                      div#taskConfigParamsAdd
-                        include plugins
+                        include plugins/taskParams
                      div(class='form-group')
                         div(class='col-lg-10')
                            input(type='button' class='btn btn-default' value='Save')#saveTaskConfig
                            input(type='button' class='btn btn-default' value='Cancel')#cancelTaskConfig
+                           input(type='button' class='btn btn-default pull-right' value='Remove')#removeTaskConfig
    script(src="/javascripts/tasks.js")

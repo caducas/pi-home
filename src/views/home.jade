@@ -5,11 +5,14 @@ html
       link(rel='stylesheet', href='/css/bootstrap.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
-      script(src='/javascripts/script.js')
+      script(src='/javascripts/home.js')
    body
       include navigation
       div.container
-         header
-            h1 Test button - it should activate the physical Switch (to switch on/off power adapter and LED) for 5 seconds
-         button(class="btn btn-success", onclick="activatePhysicalButton()").
-            Turn on light!
+         div(class='col-lg-10')
+            div(class='well')
+               This button should activate the physical Button for 5 seconds!
+               button(class="btn btn-success", onclick="activatePhysicalButton()").
+                  Activate Button
+         div(class='col-lg-10')
+            div#tasks

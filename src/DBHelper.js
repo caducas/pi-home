@@ -10,219 +10,249 @@ MongoClient.connect('mongodb://127.0.0.1:27017/pihome', function(err, database) 
 });
 var format = require('util').format;
 
-// MongoClient.connect('mongodb://127.0.0.1:27017/pihome', function(err, db) {
-// 	if(err) throw err;
-// });
-
-var testConfig = {
-	"ip" : "192.168.0.15",
-	"config" : [
-		{
-			"plugin" : "Gpio",
-			"listeners" : [
-				{
-					"listenerName" : "Button01",
-					"events" : [
-						{
-							"conditionName" : "Button01Pressed",
-							"condition" : {
-								"operator" : "=",
-								"value" : 1
-							}
-						},
-						{
-							"conditionName" : "Button01Released",
-							"condition" : {
-								"operator" : "=",
-								"value" : 0
-							}					
-						}
-					],
-					"params" : {
-						"pin" : 18
-					}
-				}
-			]
-		}
-	]
-};
-
-var realTestConfig = {
+var exampleEventConfig1 = {
+	"listenerName" : "Button01",
+	"plugin" : "Gpio",
 	"ip" : "127.0.0.1",
-	"config" : [
+	"conditions" : [
 		{
-			"plugin" : "Gpio",
-			"listeners" : [
-				{
-					"listenerName" : "Button01",
-					"events" : [
-						{
-							"conditionName" : "Button01Pressed",
-							"condition" : {
-								"operator" : "=",
-								"value" : 1
-							}
-						},
-						{
-							"conditionName" : "Button01Released",
-							"condition" : {
-								"operator" : "=",
-								"value" : 0
-							}					
-						}
-					],
-					"params" : {
-						"pin" : 18
-					}
-				}
-			]
+			"conditionName" : "Button01Pressed",
+			"condition" : {
+				"operator" : "=",
+				"value" : 1
+			}
 		},
 		{
-			"plugin" : "UI",
-			"listeners" : [
-				{
-					"listenerName" : "UIButton01",
-					"uiType" : "button",
-					"events" : [
-						{
-							"conditionName" : "pressed"
-						}
-					]
-				}
-			]
+			"conditionName" : "Button01Released",
+			"condition" : {
+				"operator" : "=",
+				"value" : 0
+			}					
 		}
-	]
+	],
+	"params" : {
+		"pin" : 18
+	}
+};
+
+var exampleEventConfig2 = {
+	"listenerName" : "UIButton01",
+	"plugin" : "UI",
+	"ip" : "127.0.0.1",
+	"conditions" : [
+		{
+			"conditionName" : "pressed"
+		}
+	],
+	"params" : {
+		"uiName" : "buttonActivatePhysicalLightSwitch"
+	}
+}
+var exampleEventConfig3 = {
+	"listenerName" : "LightSensor",
+	"plugin" : "Arduino",
+	"ip" : "127.0.0.1",
+	"conditions" : [
+		{
+			"conditionName" : "lightSensor",
+			"condition" : {
+				"operator" : ">=",
+				"value" : 0
+			}
+		}
+	],
+	"params" : {
+		"pin" : 'A5',
+		"interval" : 1000
+	}
+};
+
+var exampleEventConfig4 = {
+	"listenerName" : "RemoteControl",
+	"plugin" : "plugin433",
+	"ip" : "127.0.0.1",
+	"conditions" : [
+		{
+			"conditionName" : "01_on",
+			"condition" : {
+				"operator" : "=",
+				"value" : "1000100000001"
+			}
+		},
+		{
+			"conditionName" : "01_off",
+			"condition" : {
+				"operator" : "=",
+				"value" : "1000100000011"
+			}					
+		},
+		{
+			"conditionName" : "02_on",
+			"condition" : {
+				"operator" : "=",
+				"value" : "1000010000001"
+			}					
+		},
+		{
+			"conditionName" : "02_off",
+			"condition" : {
+				"operator" : "=",
+				"value" : "1000010000011"
+			}					
+		}
+	],
+	"params" : {
+		"pin" : 18
+	}
 };
 
 
-	var exampleTask1 = {
-		"taskId" : "SwitchOnLED",
-		"host" : "127.0.0.1",
-		"plugin" : "Gpio",
-		"params" : {
-			"direction" : 'out',
-			"pin" : 27,
-			"value" : 0
-		}
-	};
-
-	var exampleTask2 = {
-		"taskId" : "SwitchOffLED",
-		"host" : "127.0.0.1",
-		"plugin" : "Gpio",
-		"params" : {
-			"direction" : 'out',
-			"pin" : 27,
-			"value" : 1
-		}
-	};
-
-	var exampleTask3 = {
-		"taskId" : "SwitchOnPower",
-		"host" : "127.0.0.1",
-		"plugin" : "plugin433",
-		"params" : {
-			"grpId" : 1,
-			"deviceId" : 1,
-			"value" : 1
-		}
-	};
-	var exampleTask4 = {
-		"taskId" : "SwitchOffPower",
-		"host" : "127.0.0.1",
-		"plugin" : "plugin433",
-		"params" : {
-			"grpId" : 1,
-			"deviceId" : 1,
-			"value" : 0
-		}
-	};
-
-	var exampleTask5 = {
-		"taskId" : "setUIButtonStatusOn",
-		"host" : "127.0.0.1",
-		"plugin" : "UI",
-		"params" : {
-			"type" : "text"
-		}
-	};
-
-	var exampleTaskGroup1 = {
-		"taskGroupId" : "SwitchAllOn",
-		"tasks" : ["SwitchOnLED","SwitchOnPower"]
+var exampleTask1 = {
+	"taskId" : "SwitchOnLED",
+	"host" : "127.0.0.1",
+	"plugin" : "Gpio",
+	"params" : {
+		"direction" : 'out',
+		"pin" : 27,
+		"value" : 0
 	}
-	var exampleTaskGroup2 = {
-		"taskGroupId" : "SwitchAllOff",
-		"tasks" : ["SwitchOffLED","SwitchOffPower"]
-	}
+};
 
-	var exampleEventGroup1 = {
-		"eventGroupId" : "EventLightOn",
-		"events" : [
-		{
-			"listenerName" : "Button01",
-			"conditionName" : "Button01Pressed",
-			"timeDifference" : "0"
-		},
-		{
-			"listenerName" : "UIButton01",
-			"conditionName" : "pressed",
-			"timeDifference" : "5000"
-		}
-		],
-		"taskGroups" : ["SwitchAllOn"]
+var exampleTask2 = {
+	"taskId" : "SwitchOffLED",
+	"host" : "127.0.0.1",
+	"plugin" : "Gpio",
+	"params" : {
+		"direction" : 'out',
+		"pin" : 27,
+		"value" : 1
 	}
+};
 
-	var exampleEventGroup2 = {
-		"eventGroupId" : "EventLightOff",
-		"events" : [
-		{
-			"listenerName" : "Button01",
-			"conditionName" : "Button01Released",
-			"timeDifference" : "0"
-		},
-		{
-			"listenerName" : "UIButton01",
-			"conditionName" : "pressed",
-			"timeDifference" : "5000"
-		}
-		],
-		"taskGroups" : ["SwitchAllOff"]
+var exampleTask3 = {
+	"taskId" : "SwitchOnPower",
+	"host" : "127.0.0.1",
+	"plugin" : "plugin433",
+	"params" : {
+		"grpId" : 1,
+		"deviceId" : 1,
+		"value" : 1
 	}
+};
+var exampleTask4 = {
+	"taskId" : "SwitchOffPower",
+	"host" : "127.0.0.1",
+	"plugin" : "plugin433",
+	"params" : {
+		"grpId" : 1,
+		"deviceId" : 1,
+		"value" : 0
+	}
+};
 
-	var exampleEventGroup3 = {
-		"eventGroupId" : "EventLightOn",
-		"events" : 
-		[
-		{
-			"listenerName" : "UIButton01",
-			"conditionName" : "pressed",
-			"timeDifference" : "0"
-		}
-		],
-		"taskGroups" : ["SwitchAllOn"]
+var exampleTask5 = {
+	"taskId" : "setUIButtonStatusOn",
+	"host" : "127.0.0.1",
+	"plugin" : "UI",
+	"params" : {
+		"type" : "text",
+		"name" : "Status Licht"
 	}
+};
+
+var exampleFrontpageItem1 = {
+	"name" : "labelLightStatus",
+	"type" : "label",
+	"description" : "Light status",
+	"params" : {
+		"value" : 0
+	}
+}
+var exampleFrontpageItem2 = {
+	"name" : "buttonActivatePhysicalLightSwitch",
+	"type" : "button",
+	"description" : "Activate the physical Button for 5 seconds",
+	"params" : {
+		"text" : "Activate"
+	}
+}
+
+var exampleTaskGroup1 = {
+	"taskGroupId" : "SwitchAllOn",
+	"tasks" : ["SwitchOnLED","SwitchOnPower"]
+}
+var exampleTaskGroup2 = {
+	"taskGroupId" : "SwitchAllOff",
+	"tasks" : ["SwitchOffLED","SwitchOffPower"]
+}
+
+var exampleEventGroup1 = {
+	"eventGroupId" : "EventLightOn",
+	"events" : [
+	{
+		"listenerName" : "Button01",
+		"conditionName" : "Button01Pressed",
+		"timeDifference" : "0"
+	},
+	{
+		"listenerName" : "UIButton01",
+		"conditionName" : "pressed",
+		"timeDifference" : "5000"
+	}
+	],
+	"taskGroups" : ["SwitchAllOn"]
+}
+
+var exampleEventGroup2 = {
+	"eventGroupId" : "EventLightOff",
+	"events" : [
+	{
+		"listenerName" : "Button01",
+		"conditionName" : "Button01Released",
+		"timeDifference" : "0"
+	},
+	{
+		"listenerName" : "UIButton01",
+		"conditionName" : "pressed",
+		"timeDifference" : "5000"
+	}
+	],
+	"taskGroups" : ["SwitchAllOff"]
+}
+
+var exampleEventGroup3 = {
+	"eventGroupId" : "EventLightOn",
+	"events" : 
+	[
+	{
+		"listenerName" : "UIButton01",
+		"conditionName" : "pressed",
+		"timeDifference" : "0"
+	}
+	],
+	"taskGroups" : ["SwitchAllOn"]
+}
 
 process.on( 'SIGINT', function() {
   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
-  // some other closing procedures go here
   db.close();
   process.exit( );
 })
 
-//needed only for first execution
-/*
 executeDbCommand(function() {
 
-	setEventConfig("127.0.0.1", realTestConfig);
+	// setEventConfig("127.0.0.1", realTestConfig);
 
-	addTaskConfig(exampleTask1);
-	addTaskConfig(exampleTask2);
-	addTaskConfig(exampleTask3);
-	addTaskConfig(exampleTask4);
+	// addTaskConfig(exampleTask1);
+	// addTaskConfig(exampleTask2);
+	// addTaskConfig(exampleTask3);
+	// addTaskConfig(exampleTask4);
+	// addTaskConfig(exampleTask5, function() {
 
-	addTaskGroupConfig(exampleTaskGroup1);
-	addTaskGroupConfig(exampleTaskGroup2);
+	// });
+
+	// addTaskGroupConfig(exampleTaskGroup1);
+	// addTaskGroupConfig(exampleTaskGroup2);
 
 	// getTaskGroupConfig("SwitchAllOn", function(config) {
 	// 	config.eventGroups = ["EventButtonOn"];
@@ -234,43 +264,143 @@ executeDbCommand(function() {
 	// 	updateTaskGroupConfig(config);
 	// });
 
-	addEventGroupConfig(exampleEventGroup1);
-	addEventGroupConfig(exampleEventGroup2);
-	addEventGroupConfig(exampleEventGroup3);
+	// addEventGroupConfig(exampleEventGroup1, function() {});
+	// addEventGroupConfig(exampleEventGroup2, function() {});
+	// addEventGroupConfig(exampleEventGroup3);
+
+	// addEventConfig(exampleEventConfig1, function() {});
+	// addEventConfig(exampleEventConfig2, function() {});
+	// addEventConfig(exampleEventConfig3, function() {});
+	addEventConfig(exampleEventConfig4, function() {});
+
+	// addFrontpageItem(exampleFrontpageItem1, function() {});
+	// addFrontpageItem(exampleFrontpageItem2, function() {});
 
 });
-*/
 
-function getEventConfig(ip, callback) {
 
-	var collection = db.collection('eventConfig').find({"ip":ip}).toArray(function(err, docs) {
-		callback(ip, docs[0].config);
+
+
+
+//--------------------------FRONTPAGE---------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+function addFrontpageItem(item, callback) {
+	db.collection('frontend').find({"name":item.name}).toArray(function(err, docs) {
+		if(docs.length === 0) {
+			db.collection('frontend').insert(item, function(err, objects) {
+				console.log("inserting");
+				callback();
+			});
+		} else {
+			console.log("A task with the id'" + item.name + "' already exists in database");
+			callback();
+		}
 	});
 }
 
-// function getUIConfig(callback) {
+function getFrontpageItems(callback) {
+	db.collection('frontend').find({}).toArray(function(err, docs) {
+		callback(docs);
+	});	
+}
 
-// 	executeDbCommand(db.collection('eventConfig').find({"ip":"127.0.0.1","config":{$elemMatch:{"plugin":"UI"}}}).toArray(function(err, docs) {
-// 		callback(docs[0].config);
-// 	}));
-// }
+function getFrontpageItemsList(callback) {
+	db.collection('frontend').find({},{name:1}).toArray(function(err, docs) {
+		callback(docs);
+	});	
+}
+
+function getFrontpageItem(id, callback) {
+	var configId = new ObjectID(id);
+	db.collection('frontend').find({_id:configId}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});	
+}
+
+function updateFrontpageItemConfig(config, callback) {
+
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		config = prepareObjectToStoreInMongoDB(config);
+		executeDbCommand(function() {
+			db.collection('frontend').find({_id:config._id}).toArray(function(err, docs) {
+				if(docs[0].name !== config.name) {
+					db.collection('events').find({params:{$elemMatch:{uiName:docs[0].name}}}).toArray(function(err, arr) {
+						for(var i in arr) {
+							if(arr[i].params.uiName === docs[0].name) {
+								arr[i].params.uiName = config.name;
+							}
+							db.collection('events').save(arr[i], function(err, objects) {});
+						}
+					});
+				}
+				db.collection('frontend').save(config, function(err, objects) {
+					callback();
+				});
+			});
+		});
 
 
 
+		// config = prepareObjectToStoreInMongoDB(config);
+		// db.collection('frontend').save(config, function(err, objects) {
+		// 	console.log('updated');
+		// 	console.log(config);
+		// 	callback();
+		// });
+	} else {
+		addFrontpageItem(config, function() {
+			callback();
+		});
+	}
+}
+
+
+
+
+
+//--------------------------UI-Events---------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+function getUIEventNames(callback) {
+	db.collection('frontend').find({type:"button"},{name:1,_id:0}).toArray(function(err, docs) {
+		callback(docs);
+	});
+}
+
+function getUIEvent(name, callback) {
+	executeDbCommand(function() {
+		var searchString = "\"obj.params.uiName=='"+name+"'\"";
+		console.log(searchString);
+		db.collection('events').find({}).toArray(function(err, docs) {
+			for(var i in docs) {
+				if(docs[i].params.uiName === name) {
+					callback({listener:docs[i].listenerName,condition:docs[i].conditions[0].conditionName});
+				}
+			}
+		});
+	});	
+}
+
+
+
+
+
+//--------------------------Events------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+function getEventConfig(ip, callback) {
+
+	db.collection('events').find({"ip":ip}).toArray(function(err, docs) {
+		callback(ip, docs);
+	});
+}
 function getEventListenerNames(callback) {
 	executeDbCommand(function() {
-		db.collection('eventConfig').find({}).toArray(function(err, docs) {
+		db.collection('events').find({}).toArray(function(err, docs) {
 			var arr = [];
 			for(var i in docs) {
-				var doc = docs[i];
-				for(var i in doc.config) {
-					var config = doc.config[i];
-					for(var i in config.listeners) {
-						arr.push(config.listeners[i].listenerName);
-					}
-
-				}
-
+				arr.push(docs[i].listenerName);
 			}
 			callback(arr);
 		});
@@ -279,24 +409,21 @@ function getEventListenerNames(callback) {
 
 function getEventConditionNames(listenerName, callback) {
 	executeDbCommand(function() {
-		db.collection('eventConfig').find({config:{$elemMatch:{"listeners":{$elemMatch:{"listenerName":listenerName}}}}}).toArray(function(err, docs) {
+
+		db.collection('events').find({"listenerName":listenerName},{conditions:1,_id:0}).toArray(function(err, docs) {
+			var conditions = docs[0].conditions;
 			var arr = [];
-			for(var i in docs) {
-				var doc = docs[i];
-				for(var i in doc.config) {
-					var config = doc.config[i];
-					for(var i in config.listeners) {
-						if(config.listeners[i].listenerName === listenerName) {
-							var events = config.listeners[i].events;
-							for(var i in events) {
-								arr.push(events[i].conditionName);
-							}
-						}
-					}
-
-				}
-
+			console.log('conditions');
+			console.log(conditions);
+			for(var i in conditions) {
+				console.log('i');
+				console.log(i);
+				console.log('docs[i]');
+				console.log(conditions[i]);
+				arr.push(conditions[i].conditionName);
 			}
+			console.log('arr');
+			console.log(arr);
 			callback(arr);
 		});
 	});
@@ -310,27 +437,38 @@ function getEventConfigForEvent(listenerName, conditionName) {
 		});
 }
 
-function updateEventConfig(ip, newConfig) {
+function updateEventListenerConfig(config, callback) {
 
-		db.collection('eventConfig').update({"ip":ip},{$set: { "config" : newConfig } });
-}
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		config = prepareObjectToStoreInMongoDB(config);
+		executeDbCommand(function() {
+			db.collection('events').find({_id:config._id}).toArray(function(err, docs) {
+				if(docs[0].listenerName !== config.listenerName) {
+					db.collection('eventGroups').find({events:{$elemMatch:{listenerName:docs[0].listenerName}}}).toArray(function(err, arr) {
+						for(var i in arr) {
+							var events = arr[i].events;
+							for (var j in events) {
+								if(events[j].listenerName === docs[0].listenerName) {
+									events[j].listenerName = config.listenerName;
+								}
+							}
+							db.collection('eventGroups').save(arr[i], function(err, objects) {});
+						}
+					});
+				}
+				db.collection('events').save(config, function(err, objects) {
+					callback();
+				});
+			});
+		});
 
-function updateEventListenerConfig(newConfig, callback) {
-	console.log(newConfig);
-	db.collection('eventConfig').find({"config":{$elemMatch:{"listeners":{$elemMatch:{"listenerName":newConfig.listenerName}}}}}).toArray(function(err,docs) {
-		var listeners = docs[0].config.listeners;
-		for(var i in listeners) {
-			if(listeners[i].listenerName === newConfig.listenerName) {
-				var newConfigObject = {
-					"listenerName" : newConfig.listenerName,
-					"events" : newConfig.conditions,
-					"params" : newConfig.params
-				};
-				listeners[i] = newConfig;
-				updateEventConfig()
-			}
-		}
-	});
+	} else {
+
+		//TODO in addEventConfig a second check for already existing entry is done - NOT NEEDED...
+		addEventConfig(config, function() {
+			callback();
+		});
+	}
 }
 
 function setEventConfig(ip, config) {
@@ -351,42 +489,152 @@ function setEventConfig(ip, config) {
 		});
 }
 
+function addEventConfig(config, callback) {
+
+	var collection = db.collection('events').find({"listenerName":config.listenerName}).toArray(function(err, docs) {
+		if(docs.length === 0) {
+			db.collection('events').insert(config, function(err, objects) {
+				console.log("inserting");
+				callback();
+			});
+		} else {
+			console.log("A task with the id'" + config.taskId + "' already exists in database");
+			callback();
+		}
+	});
+
+}
+
+
+function getEventListeners() {
+	executeDbCommand(function() {
+		db.collection('eventConfig').find({}).toArray(function(err, docs) {
+			var eventListeners = [];
+			for(var i in docs) {
+				var ip = docs[i].ip;
+				var configs = docs[i].config;
+				for(var i in configs) {
+					var config = configs[i];
+					var plugin = configs[i].plugin;
+					var listeners = configs[i].listeners;
+					for(var i in listeners) {
+						var listener = listeners[i];
+						var listenerName = listeners[i].listenerName;
+						var events = listeners[i].events;
+
+						var eventListener = {
+							"listenerName" : listenerName,
+							"ip" : ip,
+							"plugin" : plugin,
+							"conditions" : events
+						}
+
+						eventListeners.push(eventListener);
+					}
+				}
+			}
+			callback(eventListeners);
+		});
+	});
+
+}
+
+function getEventListenerConfig(eventListenerId, callback) {
+	executeDbCommand(function() {
+		db.collection('events').find({listenerName:eventListenerId}).toArray(function(err, docs) {
+			callback(docs[0]);
+		});
+	});
+}
+
+
+
+//--------------------------Tasks-------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
 function getTaskConfig(taskId, callback) {
 		var collection = db.collection('tasks').find({"taskId":taskId}).toArray(function(err, docs) {
-			console.log(docs[0]);
 			callback(docs[0]);
 		});
 }
 
-function addTaskConfig(config) {
+function addTaskConfig(config, callback) {
 
-	var collection = db.collection('tasks').find({"taskId":config.taskId}).toArray(function(err, docs) {
+	db.collection('tasks').find({"taskId":config.taskId}).toArray(function(err, docs) {
 		if(docs.length === 0) {
 			db.collection('tasks').insert(config, function(err, objects) {
 				console.log("inserting");
+				callback();
 			});
 		} else {
 			console.log("A task with the id'" + config.taskId + "' already exists in database");
+			callback();
 		}
 	});
 }
 
-function updateTaskConfig(config) {
-	config._id = new ObjectID(config._id+'');
-	for(var i in config.params) {
-		try {
-			var newParam = parseInt(config.params[i]);
-			if(newParam>=0 || newParam <0) {
-				config.params[i] = newParam;
-			}
-		} catch (err) {
-		}
-	}
-	db.collection('tasks').save(config, function(err, objects) {
-		console.log('new task config:');
-		console.log(config);
+function getFrontpageTasks(callback) {
+	db.collection('tasks').find({"plugin":"UI"}).toArray(function(err, docs) {
+		callback(docs);
 	});
 }
+
+function updateTaskConfig(config, callback) {
+
+
+
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		config = prepareObjectToStoreInMongoDB(config);
+		console.log(config._id);
+
+
+		executeDbCommand(function() {
+			db.collection('tasks').find({_id:config._id}).toArray(function(err, docs) {
+				if(docs[0].taskId !== config.taskId) {
+					db.collection('taskGroups').find({tasks:{$in:[docs[0].taskId]}}).toArray(function(err, arr) {
+						for(var i in arr) {
+							var tasks = arr[i].tasks;
+							for (var j in tasks) {
+								if(tasks[j] === docs[0].taskId) {
+									tasks[j] = config.taskId;
+								}
+							}
+							db.collection('taskGroups').save(arr[i], function(err, objects) {});
+						}
+					});
+				}
+				db.collection('tasks').save(config, function(err, objects) {
+					callback();
+				});
+			});
+		});
+
+	} else {
+		addTaskConfig(config, function() {
+			callback();
+		});
+	}
+}
+
+function removeTaskConfig(taskId, callback) {
+	var id = new ObjectID(taskId);
+	db.collection('tasks').remove({_id:id}, function(err, numberOfRemovedDocs) {
+		callback();
+	});
+}
+
+function getTaskList(callback) {
+	executeDbCommand(function() {
+		db.collection('tasks').find({},{taskId:1,_id:0}).toArray(function(err, docs) {
+			callback(docs);
+		});
+	});
+}
+
+
+
+//--------------------------Taskgroups--------------------------------------------------
+//--------------------------------------------------------------------------------------
 
 function getTaskGroupConfig(taskGroupId, callback) {
 
@@ -397,7 +645,7 @@ function getTaskGroupConfig(taskGroupId, callback) {
 
 function addTaskGroupConfig(config, callback) {
 
-		var collection = db.collection('taskGroups').find({"taskGroupId":config.taskGroupId}).toArray(function(err, docs) {
+		db.collection('taskGroups').find({"taskGroupId":config.taskGroupId}).toArray(function(err, docs) {
 			if(docs.length === 0) {
 				db.collection('taskGroups').insert(config, function(err, objects) {
 					console.log("inserting");
@@ -411,14 +659,36 @@ function addTaskGroupConfig(config, callback) {
 }
 
 function updateTaskGroupConfig(config, callback) {
-	if((config._id+'').length>0) {
-		addTaskGroupConfig(config, function() {
-			callback();
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		console.log("should update now");
+		// config._id = new ObjectID(config._id+'');
+		config = prepareObjectToStoreInMongoDB(config);
+		console.log(config._id);
+
+		executeDbCommand(function() {
+			db.collection('taskGroups').find({_id:config._id}).toArray(function(err, docs) {
+				if(docs[0].taskGroupId !== config.taskGroupId) {
+					console.log('NOT EQUAL');
+					db.collection('eventGroups').find({taskGroups:{$in:[docs[0].taskGroupId]}}).toArray(function(err, arr) {
+						for(var i in arr) {
+							var taskGroups = arr[i].taskGroups;
+							for (var j in taskGroups) {
+								if(taskGroups[j] === docs[0].taskGroupId) {
+									taskGroups[j] = config.taskGroupId;
+								}
+							}
+							db.collection('eventGroups').save(arr[i], function(err, objects) {});
+						}
+					});
+				}
+				db.collection('taskGroups').save(config, function(err, objects) {
+					callback();
+				});
+			});
 		});
 	} else {
-		config._id = new ObjectID(config._id+'');
-		db.collection('taskGroups').save(config, function(err, objects) {
-			console.log("should be updated now");
+		console.log("should add now");
+		addTaskGroupConfig(config, function() {
 			callback();
 		});
 	}
@@ -430,6 +700,13 @@ function removeTaskGroupConfig(taskGroupId, callback) {
 		callback();
 	});
 }
+
+
+
+
+
+//--------------------------Eventgroups-------------------------------------------------
+//--------------------------------------------------------------------------------------
 
 function getEventGroupConfig(eventGroupId, callback) {
 
@@ -445,15 +722,17 @@ function getEventGroupConfigsForEvent(listenerName, conditionName, callback) {
 		});
 }
 
-function addEventGroupConfig(config) {
+function addEventGroupConfig(config, callback) {
 
 		var collection = db.collection('eventGroups').find({"eventGroupId":config.eventGroupId}).toArray(function(err, docs) {
 			if(docs.length === 0) {
 				db.collection('eventGroups').insert(config, function(err, objects) {
 					console.log("inserting");
+					callback();
 				});
 			} else {
 				console.log("An eventGroup with the id'" + config.eventGroupId + "' already exists in database");
+				callback();
 			}
 		});
 }
@@ -483,113 +762,8 @@ function removeEventGroupConfig(eventGroupId, callback) {
 	});
 }
 
-function getTaskList(callback) {
-	executeDbCommand(function() {
-		db.collection('tasks').find({},{taskId:1,_id:0}).toArray(function(err, docs) {
-			callback(docs);
-		});
-	});
-}
+// ------------------------------------- OTHERS ----------------------------------------------
 
-function getEventListeners() {
-	executeDbCommand(function() {
-		db.collection('eventConfig').find({}).toArray(function(err, docs) {
-			var eventListeners = [];
-			for(var i in docs) {
-				var ip = docs[i].ip;
-				var configs = docs[i].config;
-				for(var i in configs) {
-					var config = configs[i];
-					var plugin = configs[i].plugin;
-					var listeners = configs[i].listeners;
-					for(var i in listeners) {
-						var listener = listeners[i];
-						var listenerName = listeners[i].listenerName;
-						var events = listeners[i].events;
-
-						var eventListener = {
-							"listenerName" : listenerName,
-							"ip" : ip,
-							"plugin" : plugin,
-							"conditions" : events
-						}
-
-						eventListeners.push(eventListener);
-					}
-				}
-			}
-
-
-
-			// listenerName
-			// ip
-			// plugin
-			// [conditions]
-			// 	conditionName
-			// 	condition_operator
-			// 	condition_value
-			console.log('eventListeners');
-			console.log(eventListeners);
-			callback(eventListeners);
-		});
-	});
-
-}
-
-function getEventListenerConfig(eventListenerId, callback) {
-	executeDbCommand(function() {
-		db.collection('eventConfig').find({config:{$elemMatch:{listeners:{$elemMatch:{listenerName:eventListenerId}}}}}).toArray(function(err, docs) {
-			for(var i in docs) {
-				var ip = docs[i].ip;
-				var configs = docs[i].config;
-				for(var i in configs) {
-					var plugin = configs[i].plugin;
-					var listeners = configs[i].listeners;
-					for(var i in listeners) {
-						if(listeners[i].listenerName === eventListenerId) {
-							var listenerName = listeners[i].listenerName;
-							var events = listeners[i].events;
-							var params = listeners[i].params;
-
-							var eventListener = {
-								"listenerName" : listenerName,
-								"ip" : ip,
-								"plugin" : plugin,
-								"conditions" : events,
-								"params" : params
-							}
-
-							callback(eventListener);
-						}
-					}
-				}
-			}
-		});
-	});
-
-}
-
-function getEventListenerNames(callback) {
-	executeDbCommand(function() {
-		db.collection('eventConfig').find({}).toArray(function(err, docs) {
-			var eventListenerNames = [];
-			for(var i in docs) {
-				var configs = docs[i].config;
-				for(var i in configs) {
-					var listeners = configs[i].listeners;
-					for(var i in listeners) {
-						var listenerName = listeners[i].listenerName;
-
-						eventListenerNames.push(listenerName);
-					}
-				}
-			}
-			console.log('eventListeners');
-			console.log(eventListenerNames);
-			callback(eventListenerNames);
-		});
-	});
-}
 
 function getTaskListWithoutTasksGiven(listToReduceTasks, callback) {
 	getTaskList(function(taskList) {
@@ -678,6 +852,20 @@ function executeDbCommand(executeFunction) {
 	}
 }
 
+function prepareObjectToStoreInMongoDB(config) {
+	config._id = new ObjectID(config._id+'');
+	for(var i in config.params) {
+		try {
+			var newParam = parseInt(config.params[i]);
+			if(newParam>=0 || newParam <0) {
+				config.params[i] = newParam;
+			}
+		} catch (err) {
+		}
+	}
+	return config;
+}
+
 if(typeof exports !== 'undefined') {
 
 	//add
@@ -687,6 +875,7 @@ if(typeof exports !== 'undefined') {
 	exports.updateTaskConfig = updateTaskConfig;
 	exports.updateEventGroupConfig = updateEventGroupConfig;
 	exports.updateEventListenerConfig = updateEventListenerConfig;
+	exports.updateFrontpageItemConfig = updateFrontpageItemConfig;
 
 	//delete
 	exports.removeTaskGroupConfig = removeTaskGroupConfig;
@@ -703,12 +892,17 @@ if(typeof exports !== 'undefined') {
 	exports.getUnassignedTaskList = getUnassignedTaskList;
 	exports.getTaskGroupList = getTaskGroupList;
 	exports.getEventGroupList = getEventGroupList;
-	exports.getEventListenerNames = getEventListenerNames;
 	exports.getEventConditionNames = getEventConditionNames;
 	exports.getTaskGroupList = getTaskGroupList;
 	exports.getTaskListWithoutTasksGiven = getTaskListWithoutTasksGiven;
 	exports.getEventListenerNames = getEventListenerNames;
 	exports.getEventListenerConfig = getEventListenerConfig;
+	exports.getFrontpageItems = getFrontpageItems;
+	exports.getUIEvent = getUIEvent;
+	exports.getFrontpageItemsList = getFrontpageItemsList;
+	exports.getFrontpageItem = getFrontpageItem;
+	exports.getUIEventNames = getUIEventNames;
+	exports.removeTaskConfig = removeTaskConfig;
 
 	exports.logEvent = logEvent;
 	exports.checksEventOccuranceInLog = checksEventOccuranceInLog;

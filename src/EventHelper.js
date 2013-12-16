@@ -9,41 +9,46 @@ var networkCommunicator = require(__dirname + '/NetworkCommunicator');
 var conditionHelper = require(__dirname + '/ConditionHelper');
 
 /**
-* This method is used to execute the 'execute' method from a plugin. The plugin and the params must be defined in the parameter.
+* This method is used to execute the 'execute' method from a plugin.
 *
 * @method executeTask
-* @param {Object} taskConfig The configuration for the task. Must be valid JSON object. Must include 'plugin' and 'params' with correct params as child.
+* @param {Object} taskConfig The list of eventListener configuration for the task. Must be valid JSON objects.
 */
 function startListeners(eventConfig) {
 
-	var events = eventConfig;
+	var listeners = [];
 
-	for (var eventPos in events) {
+	for(var eventPos in eventConfig) {
+		var eventListener = eventConfig[eventPos];
+		if(eventListener.plugin !== "UI") {
 
-		var pluginEvent = events[eventPos];
+			console.log("test");
+			// var listener = JSON.parse(JSON.stringify(eventListener));
+			// var listener = jQuery.extend({}, eventListener);
+			var listener = eventListener;
+			listeners[listener.listenerName] = listener;
+			console.log('eventListener.plugin');
+			console.log(listener.plugin);
+			var plugin = pluginHelper.getPlugin(listener.plugin);
+			console.log(plugin);
+			plugin.listenEvent(listener.listenerName, listener.params);
 
-		if(pluginEvent.plugin !== "UI") {
+			console.log("should start listener for "+listener.plugin + "." + listener.listenerName);
+			process.on(listener.listenerName, function(listenerName, value) {
+				console.log('listenerName');
+				console.log(listenerName);
+				var list = listeners[listenerName];
+				console.log('list');
+				console.log(list);
+				for(var conditionPos in list.conditions) {
+					var condition = list.conditions[conditionPos];
 
-			var plugin = pluginHelper.getPlugin(pluginEvent.plugin);
-
-			for (var listenerPos in pluginEvent.listeners) {
-				var listener = pluginEvent.listeners[listenerPos];
-
-				plugin.listenEvent(listener.listenerName, listener.params);
-
-				process.on(listener.listenerName, function(value) {
-
-					for (var conditionPos in listener.events) {
-						var condition = listener.events[conditionPos];
-
-						//check condition
-						if(conditionHelper.checkCondition(value, condition.condition)) {
-							var jsonObjectToSend = {"command" : "event", "listener" : listener.listenerName, "condition" : condition.conditionName};
-							networkCommunicator.sendToServer(jsonObjectToSend);
-						}
+					if(conditionHelper.checkCondition(value, condition.condition)) {
+							var jsonObjectToSend = {"command" : "event", "listener" : list.listenerName, "condition" : condition.conditionName};
+							networkCommunicator.sendToServer(jsonObjectToSend);						
 					}
-				});
-			}
+				}
+			})
 		}
 	}
 }
