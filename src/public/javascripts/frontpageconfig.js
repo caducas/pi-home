@@ -12,7 +12,8 @@ function createNewFrontpageItem() {
 		"type" : "label",
 		"description" : "",
 		"params" : {
-			"value" : ""
+			"value" : "",
+			"variable" : ""
 		}
 	};
 
@@ -32,10 +33,18 @@ function showFrontpageItemParams() {
 	$("#frontpageItemParams").html("");
 	var paramsConfigHtml = "";
 	for(var i in activeFrontpageConfig.params) {
-		paramsConfigHtml += "<div class='form-group'><label class='col-lg-2 control-label' for='setting_"+i+"'>"+i+"</label>";
-		paramsConfigHtml += "<div class='col-lg-10'><input type='text' id='setting_"+i+"' value='"+activeFrontpageConfig.params[i]+"' class='form-control' />";
-		paramsConfigHtml += "</div></div>";
+		if(i === 'variable') {
+			paramsConfigHtml += "<div class='form-group'><label class='col-lg-2 control-label' for='setting_"+i+"'>"+i+"</label>";
+			paramsConfigHtml += "<div class='col-lg-10' id='variableList'>";
+			paramsConfigHtml += "</div></div>";
+			socket.emit('getListOfVariables');
+		} else {
+			paramsConfigHtml += "<div class='form-group'><label class='col-lg-2 control-label' for='setting_"+i+"'>"+i+"</label>";
+			paramsConfigHtml += "<div class='col-lg-10'><input type='text' id='setting_"+i+"' value='"+activeFrontpageConfig.params[i]+"' class='form-control' />";
+			paramsConfigHtml += "</div></div>";
+		}
 	}
+
 	$("#frontpageItemParams").html(paramsConfigHtml);
 }
 
@@ -50,7 +59,17 @@ function typeChanged() {
 	}
 	if(activeFrontpageConfig.type==='label') {
 		var params = {
-			value : ""
+			variable : ""
+		}
+		activeFrontpageConfig.params = params;
+	}
+	if(activeFrontpageConfig.type==='IPcam') {
+		var params = {
+			ip : "172.0.0.1",
+			username : "",
+			password : "",
+			width : 320,
+			height : 240
 		}
 		activeFrontpageConfig.params = params;
 	}
@@ -90,7 +109,26 @@ socket.on('getFrontpageItemConfigResult', function(data) {
 	activeFrontpageConfig = data;
 
 	refreshFrontpageItemConfig();
-})
+});
+
+socket.on('getListOfVariables', function(data) {
+	var variableList = "<select id='setting_variable' class='form-control'>";
+	for(var i in data) {
+		var htmlToAdd = '<option>'+data[i].name+'</option>';
+
+		try {
+			if(data[i].name === activeFrontpageConfig.params.variable) {
+				htmlToAdd = '<option selected>'+data[i].name+'</option>';
+			}
+		} catch (err) {			
+		}
+		variableList += htmlToAdd;
+	}
+	variableList += '</select>';
+	$("#variableList").html(variableList);
+	$("#variableList").value(activeFrontpageConfig.params.variable)
+	variableList += "test";
+});
 
 
 $(document).ready(function(){

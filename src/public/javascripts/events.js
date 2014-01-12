@@ -12,9 +12,6 @@ function createNewEvent() {
 		"plugin" : "UI",
 		"ip" : "127.0.0.1",
 		"conditions" : [
-			{
-				"conditionName" : "pressed"
-			}
 		],
 		"params" : {
 			"uiName" : ""
@@ -40,12 +37,19 @@ function saveEventListenerConfig() {
 	activeEventConfig.listenerName = document.getElementById("txtListenerName").value;
 	activeEventConfig.ip = document.getElementById("txtListenerIp").value;
 	activeEventConfig.plugin = document.getElementById("txtListenerPlugin").value;
+	activeEventConfig.variable = document.getElementById("txtListenerVariable").value;
+	console.log("activeEventConfig set");
 
-	for(var i in activeEventConfig.params) {
-		activeEventConfig.params[i] = document.getElementById("setting_"+activeEventConfig.plugin+"_"+i).value;
+	try {
+		for(var i in activeEventConfig.params) {
+			activeEventConfig.params[i] = document.getElementById("setting_"+activeEventConfig.plugin+"_"+i).value;
+		}
+	} catch (err) {
+		console.log("Error setting params");
 	}
 
 	socket.emit('updateEventListenerConfig',activeEventConfig);
+	console.log("event to update sent");
 	$("#eventGroupConfig").hide();
 }
 
@@ -81,6 +85,7 @@ function pluginChanged() {
 	}
 
 	refreshPluginParams();
+	refreshConditionList();
 }
 
 function refreshPluginParams() {
@@ -104,17 +109,20 @@ function refreshConditionList() {
 	if(activeEventConfig.plugin !== "UI") {
 	    var conditionListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Condition name</th><th>Operator</th><th>value</th><th>Remove</th></tr></thead><tbody>';
 	    for(var i in activeEventConfig.conditions) {
-	    	conditionListHtml += '<tr>';
-	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
-	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.operator+'</td>';
-	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.value+'</td>';
-	    	conditionListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
-	    	conditionListHtml += '</tr>';
+	    	// if(activeEventConfig.conditions[i].condition.operator !== 'undefined' && activeEventConfig.conditions[i].condition.value !== 'undefined') {}
+		    	conditionListHtml += '<tr>';
+		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
+		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.operator+'</td>';
+		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.value+'</td>';
+		    	conditionListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
+		    	conditionListHtml += '</tr>';
+		    // }
 	    }
 	    conditionListHtml += '<tr>';
 	    conditionListHtml += '<td><input type="text" id="inputListenerName" value="" class="form-control" /></td>';
 	    conditionListHtml += '<td><select class="form-control pull-right" id="selectConditionOperator">';
 	    conditionListHtml += '<option>=</option>';
+	    conditionListHtml += '<option>!=</option>';
 	    conditionListHtml += '<option>></option>';
 	    conditionListHtml += '<option><</option>';
 	    conditionListHtml += '<option>>=</option>';
@@ -133,6 +141,12 @@ function refreshConditionList() {
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
 	    	conditionListHtml += '</tr>';
 	    }
+	    conditionListHtml += '<tr>';
+	    conditionListHtml += '<td><select class="form-control pull-right" id="inputListenerName">';
+	    conditionListHtml += '<option>pressed</option>';
+	    conditionListHtml += '</select></td>';
+	    conditionListHtml += '<td><input type="button" class="btn btn-default" value="Add" onclick="addCondition()" /></td>';
+	    conditionListHtml += '</tr>';
 	    conditionListHtml += '</tbody></table>';
 		$("#conditionList").html(conditionListHtml);
 	}
@@ -148,12 +162,20 @@ function refreshConditionList() {
 
 function addCondition() {
 	var newCondition = {
-		conditionName : document.getElementById("inputListenerName").value,
-		condition : {
-			operator : document.getElementById("selectConditionOperator").value,
-			value : document.getElementById("inputConditionValue").value
-		}
+		conditionName : document.getElementById("inputListenerName").value
+		// ,
+		// condition : {
+		// 	operator : document.getElementById("selectConditionOperator").value,
+		// 	value : document.getElementById("inputConditionValue").value
+		// }
 	};
+
+	if(activeEventConfig.plugin !== "UI") {
+		newCondition.condition = {
+			operator : document.getElementById("selectConditionOperator").value,
+			value : document.getElementById("inputConditionValue").value			
+		}
+	}
 
 	activeEventConfig.conditions.push(newCondition);
 

@@ -52,6 +52,14 @@ app.get('/', function(req, res){
 			});
 		});
 
+		socket.on("getVariableValue", function(name) {
+			updateVariable(name);
+		})
+
+		process.on('#changeVariable', function(variable, value) {
+			socket.emit('updateVariable', {"name":variable, "value":value});
+		});
+
 	});
 });
 
@@ -76,6 +84,12 @@ app.get('/frontpageconfig', function(req, res) {
 				});
 			});
 		});
+
+		socket.on("getListOfVariables", function() {
+			dbHelper.getVariableList(function(res) {
+				socket.emit('getListOfVariables', res);
+			});			
+		})
 	});
 });
 
@@ -248,3 +262,15 @@ app.get('/taskgroups', function(req, res){
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+function updateVariable(variableName) {
+	dbHelper.getVariable(variableName, function(res) {
+		console.log("res.value");
+		console.log(res.value);
+		process.emit('#changeVariable', variableName, res.value);
+	})
+}
+
+if(typeof exports !== 'undefined') {
+	exports.updateVariable = updateVariable;
+}

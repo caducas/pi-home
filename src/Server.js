@@ -8,6 +8,7 @@ var eventConfig = require(__dirname + '/../config/config.json');
 var dbHelper = require(__dirname + '/DBHelper');
 var frontend = require(__dirname + '/Frontend');
 var async = require('async');
+var pluginHelper = require('./PluginHelper');
 
 //starts network server to enable clients to connect
 networkCommunicator.startServer();
@@ -56,7 +57,27 @@ process.on('#eventCatched', function(catchedEvent) {
 	checkEventForEventGroupsSuccess(catchedEvent);
 
 });
+process.on('#pluginDataReceived', function(pluginname, data) {
 
+	console.log("PLUGIN DATA RECEIVED!!!");
+	console.log(pluginname);
+	console.log(data);
+	var plugin = pluginHelper.getPlugin(pluginname);
+	plugin.processPluginData(data, function(nameOfVariable) {
+		console.log(nameOfVariable);
+		frontend.updateVariable(nameOfVariable);
+	});
+
+});
+// process.on('#changeVariable', function(variableEvent) {
+
+// 	console.log("CHANGE VARIABLE RECEIVED!!!");
+
+// 	frontend.updateVariable(variableEvent.variable, variableEvent.value);
+
+// 	// dbHelper.setVariable(variableEvent.variable, variableEvent.value);
+
+// });
 
 function checkEventForEventGroupsSuccess(catchedEvent) {
 

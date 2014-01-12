@@ -762,6 +762,47 @@ function removeEventGroupConfig(eventGroupId, callback) {
 	});
 }
 
+
+
+
+// ------------------------------------- VARIABLES ----------------------------------------------
+
+
+function setVariable(variableName, variableValue, callback) {
+
+	var collection = db.collection('variables').find({"name":variableName}).toArray(function(err, docs) {
+		if(docs.length === 0) {
+			db.collection('variables').insert({"name":variableName, "value": variableValue}, function(err, objects) {
+				console.log("inserting");
+				callback();
+			});
+		} else {
+
+			db.collection('variables').update({"name":variableName}, {$set:{"value":variableValue}}, function(err) {
+				console.log("updated existing entry");
+				callback();				
+			});
+		}
+	});
+}
+
+function getVariable(variableName, callback) {
+
+	db.collection('variables').find({"name":variableName}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});
+}
+
+function getVariableList(callback) {
+	executeDbCommand(function() {
+		db.collection('variables').find({},{name:1,_id:0}).toArray(function(err, docs) {
+			callback(docs);
+		});
+	});
+}
+
+
+
 // ------------------------------------- OTHERS ----------------------------------------------
 
 
@@ -876,6 +917,7 @@ if(typeof exports !== 'undefined') {
 	exports.updateEventGroupConfig = updateEventGroupConfig;
 	exports.updateEventListenerConfig = updateEventListenerConfig;
 	exports.updateFrontpageItemConfig = updateFrontpageItemConfig;
+	exports.setVariable = setVariable;
 
 	//delete
 	exports.removeTaskGroupConfig = removeTaskGroupConfig;
@@ -903,6 +945,8 @@ if(typeof exports !== 'undefined') {
 	exports.getFrontpageItem = getFrontpageItem;
 	exports.getUIEventNames = getUIEventNames;
 	exports.removeTaskConfig = removeTaskConfig;
+	exports.getVariable = getVariable;
+	exports.getVariableList = getVariableList;
 
 	exports.logEvent = logEvent;
 	exports.checksEventOccuranceInLog = checksEventOccuranceInLog;

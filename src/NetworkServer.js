@@ -29,8 +29,14 @@ function startServer() {
 
 		socket.on('message', function(message) {
 			console.log('DATA received from ' + clientIp + ': ' + message);
-			 if(message.command === 'event') {
+			if(message.command === 'event') {
 				process.emit('#eventCatched', message);
+			}
+			if(message.command === 'variable') {
+				process.emit('#changeVariable', message.variable, message.value);
+			}
+			if(message.command === 'data') {
+				process.emit('#pluginDataReceived', message.plugin, message.value);
 			}
 		});
 	});
@@ -45,7 +51,11 @@ function startServer() {
 */
 function sendMessage(recipient,message) {
 	console.log(message);
-	clients[recipient].sendMessage(message);
+	try {
+		clients[recipient].sendMessage(message);
+	} catch(err) {
+		console.log("Error sending to Client - maybe Client not started?");
+	}
 }
 
 

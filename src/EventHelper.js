@@ -30,7 +30,8 @@ function startListeners(eventConfig) {
 			console.log('eventListener.plugin');
 			console.log(listener.plugin);
 			var plugin = pluginHelper.getPlugin(listener.plugin);
-			console.log(plugin);
+			// console.log(plugin);
+			console.log("starts listenEvent function");
 			plugin.listenEvent(listener.listenerName, listener.params);
 
 			console.log("should start listener for "+listener.plugin + "." + listener.listenerName);
@@ -38,8 +39,28 @@ function startListeners(eventConfig) {
 				console.log('listenerName');
 				console.log(listenerName);
 				var list = listeners[listenerName];
-				console.log('list');
-				console.log(list);
+				try {
+					if(listener.sendData === 'true') {
+						var jsonObjectToSend = {"command" : "data", "plugin" : listener.plugin, "value" : value};
+						networkCommunicator.sendToServer(jsonObjectToSend);
+						console.log('SEND PLUGIN DATA:' + value);
+					}
+				} catch(err) {
+
+				}
+
+				try {
+					if(listener.variable.length > 0 && listener.variable.length !== 'undefined') {
+						var jsonObjectToSend = {"command" : "variable", "variable" : listener.variable, "value" : value};
+						networkCommunicator.sendToServer(jsonObjectToSend);
+						console.log('SEND VALUE:' + value);
+					}
+				} catch(err) {
+
+				}
+
+				// console.log('list');
+				// console.log(list);
 				for(var conditionPos in list.conditions) {
 					var condition = list.conditions[conditionPos];
 
