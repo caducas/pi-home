@@ -14,10 +14,12 @@ function createNewTask() {
 		}
 	};
 	refreshTaskConfig();
+	pluginChanged();
 }
 
 function removeTask() {
-	socket.emit('removeTask', activeTaskConfig._id);	
+	socket.emit('removeTask', activeTaskConfig._id);
+	$("#addNewTask").show();
 }
 
 function refreshTaskConfig() {
@@ -28,6 +30,7 @@ function refreshTaskConfig() {
 	refreshPluginParams();
 
 	$("#taskConfig").show();
+	$("#addNewTask").hide();
 }
 
 function pluginChanged() {
@@ -79,11 +82,13 @@ function saveTaskConfig() {
 	};
 	socket.emit('updateTaskConfig',activeTaskConfig);
 	$("#taskConfig").hide();
+	$("#addNewTask").show();
 }
 
 function cancelTaskConfig() {
 	activeTaskConfig = null;
 	$("#taskConfig").hide();
+	$("#addNewTask").show();
 }
 
 function refreshPluginList(pluginList) {

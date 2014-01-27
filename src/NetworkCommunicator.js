@@ -27,16 +27,17 @@ function startServer() {
 */
 function startClient(ip, port) {
 
-	try {
-		client = require(__dirname + '/NetworkClient');
+	client = require(__dirname + '/NetworkClient');
+	console.log("starting connecting");
 
-		client.startClient(ip,port);
-	} catch (err) {
-		console.log("Server not found - try again in 10 sec");
+	client.startClient(ip,port, function(ip, port) {
+		console.log("connection to "+ip+":"+port+" failed - trying to connect in 10 sec...");
 		setTimeout(function() {
 			startClient(ip,port);
 		},10000);
-	}
+
+	});
+	console.log("should be connecting");
 }
 
 /**

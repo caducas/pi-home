@@ -37,9 +37,10 @@ html
                      div#conditionList
                      legend Plugin-Params
                      div#pluginParams
-                        include plugins/eventListener
+                        include eventListener
                      div(class='form-group')
                         div(class='col-lg-10')
-                           input(type='button' class='btn btn-default' value='Save')#saveEventListenerConfig
                            input(type='button' class='btn btn-default' value='Cancel')#cancelEventListenerConfig
+                           input(type='button' class='btn btn-default' value='Save')#saveEventListenerConfig
+                           input(type='button' class='btn btn-default pull-right' value='Remove')#removeEventListenerConfig
    script(src="/javascripts/events.js")

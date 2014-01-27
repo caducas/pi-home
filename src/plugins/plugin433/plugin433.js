@@ -66,7 +66,7 @@ function listenEvent(eventId, opts) {
 		throw new Error("option 'port' is missing");
 	}
 	console.log('should start listener for plugin433');
-	var pin = 3;
+	var pin = parseInt(opts.pin);
 
 	var path = "sudo "+__dirname + '/receive' + " -p " + pin;
 	var executor = shellExecutor.exec(path,function(error, stdout, stderr){

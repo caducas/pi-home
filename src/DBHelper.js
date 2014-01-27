@@ -318,10 +318,20 @@ function getFrontpageItem(id, callback) {
 	});	
 }
 
+function getFrontpageItemByName(name, callback) {
+	db.collection('frontend').find({name:name}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});	
+}
+
 function updateFrontpageItemConfig(config, callback) {
 
+
+	console.log("DBHELPER: config:");
+	console.log(config);
 	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
 		config = prepareObjectToStoreInMongoDB(config);
+		console.log(config);
 		executeDbCommand(function() {
 			db.collection('frontend').find({_id:config._id}).toArray(function(err, docs) {
 				if(docs[0].name !== config.name) {
@@ -337,6 +347,9 @@ function updateFrontpageItemConfig(config, callback) {
 				db.collection('frontend').save(config, function(err, objects) {
 					callback();
 				});
+				db.collection('frontend').find({_id:config._id}).toArray(function(err, docs) {
+					console.log(docs[0]);
+				})
 			});
 		});
 
@@ -357,6 +370,139 @@ function updateFrontpageItemConfig(config, callback) {
 
 
 
+function removeFrontpageItemConfig(frontpageItemId, callback) {
+	var id = new ObjectID(frontpageItemId);
+	db.collection('frontend').remove({_id:id}, function(err, numberOfRemovedDocs) {
+		callback();
+	});
+}
+
+//--------------------------SITES-------------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+function getSitesList(callback) {
+	db.collection('sites').find({},{name:1}).toArray(function(err, docs) {
+		callback(docs);
+	});	
+}
+
+function updateSite(config, callback) {
+
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		config = prepareObjectToStoreInMongoDB(config);
+		executeDbCommand(function() {
+			db.collection('sites').save(config, function(err, objects) {
+				callback();
+			});
+		});
+	} else {
+		addSite(config, function() {
+			callback();
+		});
+	}
+}
+
+function addSite(item, callback) {
+	db.collection('sites').find({"name":item.name}).toArray(function(err, docs) {
+		if(docs.length === 0) {
+			db.collection('sites').insert(item, function(err, objects) {
+				callback();
+			});
+		} else {
+			console.log("A site with the name:'" + item.name + "' already exists in database");
+			callback();
+		}
+	});
+}
+
+function getSite(id, callback) {
+	var configId = new ObjectID(id);
+	db.collection('sites').find({_id:configId}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});
+}
+
+function removeSite(siteId, callback) {
+	var id = new ObjectID(siteId);
+	db.collection('sites').remove({_id:id}, function(err, numberOfRemovedDocs) {
+		callback();
+	});
+}
+
+
+//--------------------------CONTAINERS--------------------------------------------------
+//--------------------------------------------------------------------------------------
+
+function getContainersList(callback) {
+	db.collection('containers').find({},{name:1}).toArray(function(err, docs) {
+		callback(docs);
+	});	
+}
+
+function updateContainer(config, callback) {
+
+	if((config._id+'').length>0 && (config._id+'')!=='undefined') {
+		config = prepareObjectToStoreInMongoDB(config);
+		executeDbCommand(function() {
+			db.collection('containers').find({_id:config._id}).toArray(function(err, docs) {
+
+				db.collection('sites').find({containers:{$elemMatch:{name:docs[0].name}}}).toArray(function(err, arr) {
+					for(var i in arr) {
+						var containers = arr[i].containers;
+						for(var j in containers) {
+							if(containers[j].name === docs[0].name) {
+								containers[j].name = config.name;
+							}
+						}
+						db.collection('sites').save(arr[i], function(err, objects) {});
+					}
+				});
+
+				db.collection('containers').save(config, function(err, objects) {
+					callback();
+				});
+			});
+		});
+
+	} else {
+		addContainer(config, function() {
+			callback();
+		});
+	}
+}
+
+function addContainer(item, callback) {
+	db.collection('containers').find({"name":item.name}).toArray(function(err, docs) {
+		if(docs.length === 0) {
+			db.collection('containers').insert(item, function(err, objects) {
+				callback();
+			});
+		} else {
+			console.log("A container with the name:'" + item.name + "' already exists in database");
+			callback();
+		}
+	});
+}
+
+function getContainer(id, callback) {
+	var configId = new ObjectID(id);
+	db.collection('containers').find({_id:configId}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});
+}
+
+function getContainerByName(name, callback) {
+	db.collection('containers').find({name:name}).toArray(function(err, docs) {
+		callback(docs[0]);
+	});
+}
+
+function removeContainer(containerId, callback) {
+	var id = new ObjectID(containerId);
+	db.collection('containers').remove({_id:id}, function(err, numberOfRemovedDocs) {
+		callback();
+	});
+}
 
 
 //--------------------------UI-Events---------------------------------------------------
@@ -547,6 +693,13 @@ function getEventListenerConfig(eventListenerId, callback) {
 	});
 }
 
+
+function removeEventListenerConfig(eventListenerId, callback) {
+	var id = new ObjectID(eventListenerId);
+	db.collection('events').remove({_id:id}, function(err, numberOfRemovedDocs) {
+		callback();
+	});
+}
 
 
 //--------------------------Tasks-------------------------------------------------------
@@ -895,10 +1048,13 @@ function executeDbCommand(executeFunction) {
 
 function prepareObjectToStoreInMongoDB(config) {
 	config._id = new ObjectID(config._id+'');
+
+
+	//store everything as string...
 	for(var i in config.params) {
 		try {
 			var newParam = parseInt(config.params[i]);
-			if(newParam>=0 || newParam <0) {
+			if(newParam.toString().length === config.params[i].length && (newParam>=0 || newParam <0)) {
 				config.params[i] = newParam;
 			}
 		} catch (err) {
@@ -918,10 +1074,16 @@ if(typeof exports !== 'undefined') {
 	exports.updateEventListenerConfig = updateEventListenerConfig;
 	exports.updateFrontpageItemConfig = updateFrontpageItemConfig;
 	exports.setVariable = setVariable;
+	exports.updateSite = updateSite;
+	exports.updateContainer = updateContainer;
 
 	//delete
 	exports.removeTaskGroupConfig = removeTaskGroupConfig;
 	exports.removeEventGroupConfig = removeEventGroupConfig;
+	exports.removeSite = removeSite;
+	exports.removeContainer = removeContainer;
+	exports.removeFrontpageItemConfig = removeFrontpageItemConfig;
+	exports.removeEventListenerConfig = removeEventListenerConfig;
 
 	//get
 	exports.getEventConfig = getEventConfig;
@@ -947,6 +1109,12 @@ if(typeof exports !== 'undefined') {
 	exports.removeTaskConfig = removeTaskConfig;
 	exports.getVariable = getVariable;
 	exports.getVariableList = getVariableList;
+	exports.getSitesList = getSitesList;
+	exports.getSite = getSite;
+	exports.getContainersList = getContainersList;
+	exports.getContainer = getContainer;
+	exports.getContainerByName = getContainerByName;
+	exports.getFrontpageItemByName = getFrontpageItemByName;
 
 	exports.logEvent = logEvent;
 	exports.checksEventOccuranceInLog = checksEventOccuranceInLog;

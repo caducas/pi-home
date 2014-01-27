@@ -15,6 +15,17 @@ var path = __dirname + '/plugins/';
 */
 function getListOfPluginNames() {
 	var pluginList = fs.readdirSync(path);
+
+	// for(var i = 0; i<pluginList.length; i++) {
+	// 	plugin = require(path+pluginList[i]+'/'+pluginList[i]);
+	// 	console.log("checking plugin:" + pluginList[i]);
+	// 	if (typeof(plugin.listenEvent) === "undefined") { 
+	// 		console.log("removing plugin:" + pluginList[i]);
+	// 		pluginList.splice(i,1);
+	// 		i--;
+	// 	}
+	// }
+	// console.log(pluginList);
 	return pluginList;
 }
 

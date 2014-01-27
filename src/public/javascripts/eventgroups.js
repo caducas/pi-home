@@ -20,11 +20,13 @@ function createNewEventGroup() {
 	socket.emit('getTaskGroupNames');
 
 	showEventGroupConfig();
+	$("#newEventGroup").hide();
 }
 
 function cancelEventGroupConfig() {
 	activeEventGroupConfig = null;
-	$("#eventGroupConfig").hide();	
+	$("#eventGroupConfig").hide();
+	$("#newEventGroup").show();
 }
 
 function removeEventGroup() {
@@ -45,6 +47,7 @@ function showEventGroupConfig() {
 	socket.emit('getTaskGroupNames');
 
 	$("#eventGroupConfig").show();
+	$("#newEventGroup").hide();
 }
 
 function removeEventFromEventGroup(pos) {
@@ -124,6 +127,7 @@ function saveEventGroupConfig() {
 	activeEventGroupConfig.eventGroupId = document.getElementById("txtEventGroupId").value;
 	socket.emit('updateEventGroupConfig',activeEventGroupConfig);
 	$("#eventGroupConfig").hide();
+	$("#newEventGroup").show();
 }
 
 socket.on('eventGroupsIdList', function(data) {

@@ -27,6 +27,7 @@ function refreshFrontpageItemConfig() {
 	showFrontpageItemParams();
 
 	$("#frontpageItemConfig").show();
+	$("#newFrontpageItem").hide();
 }
 
 function showFrontpageItemParams() {
@@ -63,35 +64,38 @@ function typeChanged() {
 		}
 		activeFrontpageConfig.params = params;
 	}
-	if(activeFrontpageConfig.type==='IPcam') {
-		var params = {
-			ip : "172.0.0.1",
-			username : "",
-			password : "",
-			width : 320,
-			height : 240
-		}
-		activeFrontpageConfig.params = params;
+	if(activeFrontpageConfig.type!=='button' && activeFrontpageConfig.type !== 'label') {
+		getEmptyConfigParams();
+		//pluginManager getConfig
+	} else {
+		showFrontpageItemParams();
 	}
+}
 
-	showFrontpageItemParams();
+function getEmptyConfigParams() {
+	socket.emit('getEmptyConfigParams', activeFrontpageConfig.type);
 }
 
 function cancelFrontpageItemConfig() {
 	activeFrontpageConfig = null;
 	$("#frontpageItemConfig").hide();
+	$("#newFrontpageItem").show();
 }
 
 function saveFrontpageItemConfig() {
-	activeFrontpageConfig.name = document.getElementById("txtName").value;
-	activeFrontpageConfig.description = document.getElementById("txtDescription").value;
+	activeFrontpageConfig.name = document.getElementById("txtName").value.toString();
+	activeFrontpageConfig.description = document.getElementById("txtDescription").value.toString();
 
 	for(var i in activeFrontpageConfig.params) {
-		activeFrontpageConfig.params[i] = document.getElementById("setting_"+i).value;
+		activeFrontpageConfig.params[i] = document.getElementById("setting_"+i).value.toString();
 	}
 
 	socket.emit('updateFrontpageItemConfig',activeFrontpageConfig);
+	$("#newFrontpageItem").show();
+}
 
+function removeFrontpageItem() {
+	socket.emit('removeFrontpageItem', activeFrontpageConfig._id);
 }
 
 socket.on('getFrontpageItemList', function(data) {
@@ -126,14 +130,25 @@ socket.on('getListOfVariables', function(data) {
 	}
 	variableList += '</select>';
 	$("#variableList").html(variableList);
-	$("#variableList").value(activeFrontpageConfig.params.variable)
 	variableList += "test";
+});
+
+socket.on('removedFrontendItem', function() {
+	activeFrontpageConfig = null;
+	$("#frontpageItemConfig").hide();
+	$("#newFrontpageItem").show();
+});
+
+socket.on('getEmptyConfigParamsResult', function(emptyConfigParams) {
+	activeFrontpageConfig.params = emptyConfigParams;
+	showFrontpageItemParams();
 });
 
 
 $(document).ready(function(){
-   $("#saveFrontpageItemConfig").click(function() {saveFrontpageItemConfig();});
-   $("#cancelFrontpageItemConfig").click(function() {cancelFrontpageItemConfig();});
+	$("#saveFrontpageItemConfig").click(function() {saveFrontpageItemConfig();});
+	$("#cancelFrontpageItemConfig").click(function() {cancelFrontpageItemConfig();});
+	$("#removeFrontpageItem").click(function() {removeFrontpageItem();});
    	$('#newFrontpageItem').click(function() {createNewFrontpageItem();});
 	$("#frontpageItemConfig").hide();
 });

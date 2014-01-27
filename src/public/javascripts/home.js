@@ -15,7 +15,7 @@ function uiEvent(id) {
 socket.on('getFrontpageItems', function(result) {
 	var frontpageTasksHtml = "";
 	for(var i in result) {
-		frontpageTasksHtml += "<div class='well'>" +result[i].description;
+		frontpageTasksHtml += "<div class='well'><div class='well-header'>Test-Header</div>" +result[i].description;
 		console.log(result[i]);
 		if(result[i].type === 'button') {
 			frontpageTasksHtml += '<input type="button" value="'+result[i].params.text+'" onclick="uiEvent(\''+result[i].name+'\')" class="btn btn-success pull-right" />';
@@ -38,16 +38,13 @@ socket.on('getFrontpageItems', function(result) {
 			} catch(err) {
 			}
 		}
-		if(result[i].type === 'IPcam') {
-			console.log(result[i].name);
-			console.log(result[i].params.width);
-			console.log(result[i].params.height);
-			console.log(result[i].params.ip+'');
-			console.log(result[i].params.username);
-			console.log(result[i].params.password);
-			frontpageTasksHtml += "<div id='IPcamImage" + result[i].name + "' class='pull-right'><img style='-webkit-user-select: none' width='"+result[i].params.width+"' height='"+result[i].params.height+"' src='http://"+result[i].params.ip+"/snapshot.cgi?user="+result[i].params.username+"&amp;pwd="+result[i].params.password+"' />"
-			console.log(frontpageTasksHtml);
+
+		if(result[i].type !== 'button' && result[i].type !== 'label') {
+			frontpageTasksHtml += "<div id='" + result[i].type + result[i].name + "' class='pull-right'></div>";
+			socket.emit('getFrontpageItem', result[i]);			
 		}
+		
+		frontpageTasksHtml += "<div style='clear: both;''></div>";
 		frontpageTasksHtml += "</div>";
 	}
 	$('#tasks').html(frontpageTasksHtml);
@@ -58,6 +55,12 @@ socket.on('updateVariable', function(variable) {
 	// document.getElementById("variable_#WFROG_temperature_inside").html(htmlContent);
 	$("#variable_"+variable.name).html(htmlContent);
 	// document.getElementById("variable_"+variable.name).textContent = variable.value;
+});
+
+socket.on('getFrontpageItem', function(item, frontpageItem) {
+	var frontpageItemHtml = frontpageItem;
+	frontpageItemHtml += "<div style='clear: both;''></div>";
+	$("#"+item.type + item.name).html(frontpageItemHtml);
 });
 
 $(document).ready(function(){

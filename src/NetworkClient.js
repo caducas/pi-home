@@ -14,13 +14,20 @@ var client;
 * @param {String} serverIp The ip address of the server.
 * @param {Number} port The port of the server.
 */
-function startClient(serverIp, port) {
+function startClient(serverIp, port, onError) {
 
 	client = new JsonSocket(new net.Socket());
 
+	console.log("connecting to "+serverIp+":"+port);
 	client.connect(port, serverIp, function() {
 		console.log('CONNECTED client TO: ' + serverIp + ':' + port);
 	});
+
+	client.on('error', function(err) {
+		if(err.code === "ECONNREFUSED") {
+			// onError(serverIp, port);			
+		}
+    });
 
 	client.on('data', function(data) {
 	});
@@ -29,20 +36,18 @@ function startClient(serverIp, port) {
 
 		if(message.command==='executeTask') {
 			console.log("execute task:");
-			console.log(message.params);
 			process.emit('#executeTask', message.params);
 		}
 
 		if(message.command==='configEventListeners') {
 			console.log("start listeners command received!");
-			console.log('message');
-			console.log(message);
 			process.emit('#config', message.params);
 		}
 	});
 
 	client.on('close', function() {
-		console.log('Connection closed');
+		console.log('Connection closed but reconnecting');
+			onError(serverIp, port);	
 		client.end();
 	});
 }

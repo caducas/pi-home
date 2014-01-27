@@ -29,6 +29,8 @@ var onOff = require('onoff').Gpio;
 *	- 'value' = the value for direction 'out'
 */
 function execute(opts) {
+	console.log("received execute command with opts:");
+	console.log(opts);
 	if(opts==='undefined') {
 		throw new Error("arguments for execute missing");
 	}
@@ -55,10 +57,18 @@ function execute(opts) {
 * @param {int} value The value which should be send (1 = HIGH, 0 = LOW).
 */
 function sendOutput(pin, value) {
+
+		console.log("received sendOutput command with pin:" + pin + " value:" + value);
 		var gpioPin = new onOff(pin, 'out');
 		console.log("should turn " + value);
-		gpioPin.writeSync(value);
+		gpioPin.writeSync(parseInt(value));
 		gpioPin.unexport();
+		// console.log("received sendOutput command with pin:" + pin + " value:" + value);
+		// var gpioPin = new onOff(pin, 'out');
+		// console.log("should turn " + value);
+		// gpioPin.writeSync(value);
+		// gpioPin.unexport();
+		// console.log("should be successful");
 }
 
 /**

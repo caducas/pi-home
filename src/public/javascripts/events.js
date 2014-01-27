@@ -31,6 +31,7 @@ function removeConditionFromEventListener(pos) {
 function cancelEventListenerConfig() {
 	activeEventConfig = null;
 	$("#eventGroupConfig").hide();
+	$("#addNewEvent").show();
 }
 
 function saveEventListenerConfig() {
@@ -51,6 +52,7 @@ function saveEventListenerConfig() {
 	socket.emit('updateEventListenerConfig',activeEventConfig);
 	console.log("event to update sent");
 	$("#eventGroupConfig").hide();
+	$("#addNewEvent").show();
 }
 
 function refreshPluginList(pluginList) {
@@ -202,6 +204,11 @@ function refreshEventConfig() {
 	}
 
 	$("#params_"+activeEventConfig.plugin).show();
+	$("#addNewEvent").hide();
+}
+
+function removeEventConfig() {
+	socket.emit('removeEventConfig', activeEventConfig._id);
 }
 
 socket.on('listenerNamesList', function(data) {
@@ -224,9 +231,16 @@ socket.on('getAvailablePlugins', function(listOfPlugins) {
 	refreshPluginList(listOfPlugins);
 });
 
+socket.on('removedEventConfig', function() {
+	activeEventConfig = null;
+	$("#eventGroupConfig").hide();
+	$("#addNewEvent").show();
+});
+
 $(document).ready(function(){
    $("#saveEventListenerConfig").click(function() {saveEventListenerConfig();});
    $("#cancelEventListenerConfig").click(function() {cancelEventListenerConfig();});
+   $("#removeEventListenerConfig").click(function() {removeEventConfig();});
    $('#addNewEvent').click(function() {createNewEvent();});
 
    $("#eventGroupConfig").hide();

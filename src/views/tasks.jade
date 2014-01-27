@@ -5,6 +5,7 @@ html
       link(rel='stylesheet', href='/css/bootstrap.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
+      meta(name='viewport',content='width=device-width,initial-scale=1.0')
    body
       include navigation
       div.container
@@ -30,7 +31,7 @@ html
                            div#plugin
                      div#taskConfigParams
                      div#taskConfigParamsAdd
-                        include plugins/taskParams
+                        include taskParams
                      div(class='form-group')
                         div(class='col-lg-10')
                            input(type='button' class='btn btn-default' value='Save')#saveTaskConfig

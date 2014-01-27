@@ -37,10 +37,13 @@ app.get('/', function(req, res){
   res.render('home.jade');
 	io.sockets.once('connection', function (socket) {
 
+		refreshNavigation(socket);
+
 		//loading frontpage
 		dbHelper.getFrontpageItems(function(res) {
 			socket.emit('getFrontpageItems', res);
 		});
+
 
 		socket.on("activatePhysicalButton", function() {
 			process.emit('#eventCatched', {"listener":"UIButton01","condition":"pressed"});
@@ -60,6 +63,80 @@ app.get('/', function(req, res){
 			socket.emit('updateVariable', {"name":variable, "value":value});
 		});
 
+		socket.on('getFrontpageItem', function(item) {
+			console.log("FRONTEND: received request for frontpageItem");
+			var plugin = pluginHelper.getPlugin(item.type);
+			plugin.getFrontpageItem(item, function(frontpageItem) {
+				console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
+				socket.emit('getFrontpageItem', item, frontpageItem);
+			});
+		});
+
+		socket.on('loadSite', function(siteId) {
+			res.render('site.jade');
+			console.log("DBHELPER:should load site now");
+			dbHelper.getSite(siteId, function(site) {
+				socket.emit('getSite', site);
+				for(var i in site.containers) {
+					dbHelper.getContainerByName(site.containers[i].name, function(container) {
+						socket.emit('getContainer', container);
+					});
+				}
+			});
+		});
+
+	});
+});
+
+app.get('/site', function(req, res) {
+	res.render('site.jade');
+	io.sockets.once('connection', function (socket) {
+		
+		refreshNavigation(socket);
+
+		var siteId = req.query.id;
+		dbHelper.getSite(siteId, function(site) {
+
+			socket.emit('getSite', site);
+			for(var i in site.containers) {
+				dbHelper.getContainerByName(site.containers[i].name, function(container) {
+					socket.emit('getContainer', container);
+					for(var j in container.elements) {
+						dbHelper.getFrontpageItemByName(container.elements[j].name, function(element) {
+							console.log("FRONTEND:element" + element);
+							socket.emit('getElement', element);
+						});
+					}
+				});
+			}
+		});
+
+		socket.on("getVariableValue", function(name) {
+			console.log("FRONTEND: get Variable value for variable:" + name)
+			updateVariable(name);
+		});
+
+
+		process.on('#changeVariable', function(variable, value) {
+			console.log("FRONTEND: should update Variable now");
+			socket.emit('updateVariable', {"name":variable, "value":value});
+		});
+		
+		socket.on("uiEvent", function(name) {
+			dbHelper.getUIEvent(name, function(result) {
+				process.emit('#eventCatched', result);
+			});
+		});
+		
+		socket.on('getFrontpageItem', function(item) {
+			console.log("FRONTEND: received request for frontpageItem");
+			var plugin = pluginHelper.getPlugin(item.type);
+			plugin.getFrontpageItem(item, function(frontpageItem) {
+				console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
+				socket.emit('getFrontpageItem', item, frontpageItem);
+			});
+		});
+
 	});
 });
 
@@ -67,6 +144,9 @@ app.get('/', function(req, res){
 app.get('/frontpageconfig', function(req, res) {
 	res.render('frontpageconfig.jade');
 	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
+
 		dbHelper.getFrontpageItemsList(function(res) {
 			socket.emit('getFrontpageItemList', res);
 		});
@@ -78,6 +158,8 @@ app.get('/frontpageconfig', function(req, res) {
 		});
 
 		socket.on("updateFrontpageItemConfig", function(config) {
+			console.log("FRONTEND: config");
+			console.log(config);
 			dbHelper.updateFrontpageItemConfig(config, function() {
 				dbHelper.getFrontpageItemsList(function(res) {
 					socket.emit('getFrontpageItemList', res);
@@ -89,7 +171,104 @@ app.get('/frontpageconfig', function(req, res) {
 			dbHelper.getVariableList(function(res) {
 				socket.emit('getListOfVariables', res);
 			});			
-		})
+		});
+
+		socket.on("removeFrontpageItem", function(frontpageItemId) {
+			dbHelper.removeFrontpageItemConfig(frontpageItemId, function() {
+				socket.emit('removedFrontend');
+				dbHelper.getFrontpageItemsList(function(res) {
+					socket.emit('getFrontpageItemList', res);
+				});
+			});
+		});
+
+		socket.on("getEmptyConfigParams", function(type) {
+			var emptyConfigParams = pluginHelper.getPlugin(type).getEmptyConfigParams();
+			socket.emit('getEmptyConfigParamsResult', emptyConfigParams);
+		});
+	});
+});
+
+app.get('/sites', function(req, res) {
+	res.render('sites.jade');
+	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
+
+		dbHelper.getSitesList(function(res) {
+			socket.emit('getSitesList', res);
+		});
+
+		socket.on("updateSite", function(config) {
+			dbHelper.updateSite(config, function() {
+				dbHelper.getSitesList(function(res) {
+					socket.emit('getSitesList', res);
+				});
+			});
+		});
+
+		socket.on("getSite", function(id) {
+			dbHelper.getSite(id, function(config) {
+				socket.emit('getSite', config);
+			});
+		});
+
+		socket.on("removeSite", function(siteId) {
+			dbHelper.removeSite(siteId, function() {
+				dbHelper.getSitesList(function(res) {
+					socket.emit('getSitesList', res);
+				});
+			});
+		});
+
+		socket.on("getContainerNames", function() {
+			dbHelper.getContainersList(function(res) {
+				socket.emit('getContainerNames', res);
+			});
+		});
+	});
+});
+
+app.get('/containers', function(req, res) {
+	res.render('containers.jade');
+	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
+
+		dbHelper.getContainersList(function(res) {
+			socket.emit('getContainersList', res);
+		});
+
+		socket.on("updateContainer", function(config) {
+			dbHelper.updateContainer(config, function() {
+				dbHelper.getContainersList(function(res) {
+					socket.emit('getContainersList', res);
+				});
+			});
+		});
+
+		socket.on("getContainer", function(id) {
+			dbHelper.getContainer(id, function(config) {
+				socket.emit('getContainer', config);
+			});
+			dbHelper.getFrontpageItemsList(function(elementName) {
+				socket.emit('getElementNames', elementName);
+			});
+		});
+
+		socket.on("removeContainer", function(id) {
+			dbHelper.removeContainer(id, function() {
+				dbHelper.getContainersList(function(res) {
+					socket.emit('getContainersList', res);
+				});
+			});
+		});
+
+		socket.on("getElementNames", function() {
+			dbHelper.getFrontpageItemsList(function(elementName) {
+				socket.emit('getElementNames', elementName);
+			});			
+		});
 	});
 });
 
@@ -97,6 +276,8 @@ app.get('/frontpageconfig', function(req, res) {
 app.get('/tasks', function(req, res){
   	res.render('tasks.jade');
 	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
 
 		dbHelper.getTaskList(function(res) {
 			socket.emit('taskIdList', res);
@@ -133,6 +314,9 @@ app.get('/tasks', function(req, res){
 app.get('/events', function(req, res){
   	res.render('events.jade');
 	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
+
 		socket.emit('getAvailablePlugins', pluginHelper.getListOfPluginNames());
 		dbHelper.getEventListenerNames(function(res) {
 			socket.emit('listenerNamesList', res);
@@ -159,6 +343,15 @@ app.get('/events', function(req, res){
 				socket.emit('getUIEventElementsResult', res);
 			});
 		});
+
+		socket.on("removeEventConfig", function(eventId) {
+			dbHelper.removeEventListenerConfig(eventId, function() {
+				socket.emit('removedEventConfig');
+				dbHelper.getEventListenerNames(function(res) {
+					socket.emit('listenerNamesList', res);
+				});
+			});
+		});
 	});
 });
 
@@ -166,6 +359,8 @@ app.get('/events', function(req, res){
 app.get('/eventgroups', function(req, res){
   	res.render('eventgroups.jade');
 	io.sockets.once('connection', function (socket) {
+		
+		refreshNavigation(socket);
 
 		dbHelper.getEventGroupList(function(res) {
 			socket.emit('eventGroupsIdList', res);
@@ -220,6 +415,8 @@ app.get('/taskgroups', function(req, res){
   	res.render('taskgroups.jade');
 	io.sockets.once('connection', function (socket) {
 
+		refreshNavigation(socket);
+
 			dbHelper.getTaskGroupList(function(res) {
 				socket.emit('taskGroupsIdList', res);
 			});
@@ -259,6 +456,15 @@ app.get('/taskgroups', function(req, res){
 	});
 });
 
+app.get('/wfrog', function(req, res){
+  res.render('wfrog.jade');
+	io.sockets.once('connection', function (socket) {
+
+		refreshNavigation(socket);
+		
+	});
+});
+
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -269,6 +475,12 @@ function updateVariable(variableName) {
 		console.log(res.value);
 		process.emit('#changeVariable', variableName, res.value);
 	})
+}
+
+function refreshNavigation(socket) {
+	dbHelper.getSitesList(function(res) {
+		socket.emit('getSites', res);
+	});
 }
 
 if(typeof exports !== 'undefined') {
