@@ -12,11 +12,9 @@ var port = 6969;
 
 if(process.argv[2] !== undefined) {
 	ip = process.argv[2];
-	console.log("ip is now:" + ip);
 }
 if(process.argv[3] !== undefined) {
 	port = process.argv[3];
-	console.log("port is now:" + port);
 }
 
 //connects to server over network

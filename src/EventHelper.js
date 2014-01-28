@@ -18,6 +18,9 @@ function startListeners(eventConfig) {
 
 	var listeners = [];
 
+	console.log('EVENTHELPER: eventConfig:');
+	console.log(eventConfig);
+
 	for(var eventPos in eventConfig) {
 		var eventListener = eventConfig[eventPos];
 		if(eventListener.plugin !== "UI") {
@@ -39,21 +42,26 @@ function startListeners(eventConfig) {
 				console.log('listenerName');
 				console.log(listenerName);
 				var list = listeners[listenerName];
+				console.log('listener');
+				console.log(listener);
+				console.log('list');
+				console.log(list);
+				console.log('sendData:'+listener.sendData);
 				try {
-					if(listener.sendData === 'true') {
-						var jsonObjectToSend = {"command" : "data", "plugin" : listener.plugin, "value" : value};
-						networkCommunicator.sendToServer(jsonObjectToSend);
+					if(list.sendData === 'true') {
+						var jsonObjectToSend = {"command" : "data", "plugin" : list.plugin, "value" : value};
 						console.log('SEND PLUGIN DATA:' + value);
+						networkCommunicator.sendToServer(jsonObjectToSend);
 					}
 				} catch(err) {
 
 				}
 
 				try {
-					if(listener.variable.length > 0 && listener.variable.length !== 'undefined') {
-						var jsonObjectToSend = {"command" : "variable", "variable" : listener.variable, "value" : value};
-						networkCommunicator.sendToServer(jsonObjectToSend);
+					if(list.variable.length > 0 && list.variable.length !== 'undefined') {
+						var jsonObjectToSend = {"command" : "variable", "variable" : list.variable, "value" : value};
 						console.log('SEND VALUE:' + value);
+						networkCommunicator.sendToServer(jsonObjectToSend);
 					}
 				} catch(err) {
 

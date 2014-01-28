@@ -23,10 +23,6 @@ function setEventConfig(newEventConfig) {
 	eventConfig = newEventConfig;
 }
 
-// process.on('exit', function (){
-//   console.log('Goodbye!');
-// });
-
 //Event when client connected to server - sends configuration to client
 process.on('#clientConnected', function(ip) {
 
@@ -59,12 +55,9 @@ process.on('#eventCatched', function(catchedEvent) {
 });
 process.on('#pluginDataReceived', function(pluginname, data) {
 
-	console.log("PLUGIN DATA RECEIVED!!!");
-	console.log(pluginname);
-	console.log(data);
 	var plugin = pluginHelper.getPlugin(pluginname);
 	plugin.processPluginData(data, function(nameOfVariable) {
-		console.log(nameOfVariable);
+		console.log('SERVER: update Variable ' + nameOfVariable);
 		frontend.updateVariable(nameOfVariable);
 	});
 
@@ -116,21 +109,10 @@ function checkEventForEventGroupsSuccess(catchedEvent) {
 					var taskGroups = eventGroup.taskGroups;
 					for(var pos in taskGroups) {
 						var taskGroupId = taskGroups[pos];
-						// console.log('taskGroupId');
-						// console.log(taskGroupId);
 						dbHelper.getTaskGroupConfig(taskGroupId, function(taskGroup) {
-							// console.log('taskGroup');
-							// console.log(taskGroup);
 							for(var pos in taskGroup.tasks) {
-								// console.log('pos');
-								// console.log(pos);
 								var taskId = taskGroup.tasks[pos];
-								// console.log('taskId');
-								// console.log(taskId);
 								dbHelper.getTaskConfig(taskId, function(taskConfig) {
-									// console.log('taskConfig');
-									// console.log(taskConfig);
-
 									var configObject = {
 										"command" : "executeTask",
 										"params" : taskConfig

@@ -81,7 +81,6 @@ function addContainer() {
 		}
 	}
 	activeSite.containers.push({"name":document.getElementById("selectContainerName").value,"pos":activeSite.containers.length+1});
-	console.log(activeSite);
 
 	refreshContainersList();
 }

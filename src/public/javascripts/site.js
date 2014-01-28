@@ -14,10 +14,7 @@ function refreshSite() {
 	var currentWidth = 0;
 
 	for(var i in site.containers) {
-		console.log(site.containers[i]);
-
 		if((currentWidth +  parseInt(site.containers[i].container.width))>12) {
-			// console.log("FutureSize:"+(currentWidth +  parseInt(site.containers[i].container.width)));
 			containersHtml += "</div><div class='row'>";
 			currentWidth = 0;
 		}
@@ -33,7 +30,6 @@ function refreshSite() {
 			};
 
 			if(element.type === 'button') {
-				console.log("Should add button " + element.params.text);
 				containersHtml += '<input type="button" value="'+element.params.text+'" onclick="uiEvent(\''+element.name+'\')" class="btn btn-success pull-right" />';
 			}
 			if(element.type === 'label') {
@@ -46,9 +42,7 @@ function refreshSite() {
 				try {
 					if(element.params.variable !== 'undefined' && element.params.variable.length > 0) {
 						containersHtml += "<div id='variable_"+element.params.variable+"' class='pull-right'></div>";
-						// frontpageTasksHtml += "<span class='label label-info pull-right' id='value_"+result[i].params.variable+"'>"+result[i].params.value+"</span><span class='label label-info pull-right' id='variable_"+result[i].params.variable+"'></span>";
 						socket.emit('getVariableValue', element.params.variable);
-						console.log("SITE: get Variable value for variable called:" + element.params.variable);
 					} else {
 						throw "variable not defined";
 					}
@@ -58,10 +52,10 @@ function refreshSite() {
 
 			if(element.type !== 'button' && element.type !== 'label') {
 				containersHtml += "<div id='" + element.type + element.name + "' class='pull-right'></div>";
+				socket.emit('getFrontpageItem', element);
 				if(element.params.refresh>0) {
 					refreshElement(element.type+element.name, element.params.refresh);				
 				}
-				socket.emit('getFrontpageItem', element);
 			}
 
 		}
@@ -69,7 +63,6 @@ function refreshSite() {
 		containersHtml += "<div style='clear: both;''></div>";
 		containersHtml += "</div></div>";	
 	}
-
 	containersHtml += "</div>";
 	$('#containers').html(containersHtml);
 
@@ -78,8 +71,6 @@ function refreshSite() {
 function refreshElement(elementName, interval) {
 	setInterval(function()
 	{
-		console.log(elementName);
-		console.log(document.getElementById(elementName).innerHTML);
 		$('#'+elementName).html(document.getElementById(elementName).innerHTML);
 	}, interval);
 }
@@ -115,7 +106,6 @@ socket.on('getContainer', function(data) {
 });
 
 socket.on('getElement', function(data) {
-	console.log("ELEMENT name: "+ data.name);
 	for(var i in site.containers) {
 		try{
 			for(var j in site.containers[i].container.elements) {

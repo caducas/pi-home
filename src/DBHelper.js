@@ -10,228 +10,228 @@ MongoClient.connect('mongodb://127.0.0.1:27017/pihome', function(err, database) 
 });
 var format = require('util').format;
 
-var exampleEventConfig1 = {
-	"listenerName" : "Button01",
-	"plugin" : "Gpio",
-	"ip" : "127.0.0.1",
-	"conditions" : [
-		{
-			"conditionName" : "Button01Pressed",
-			"condition" : {
-				"operator" : "=",
-				"value" : 1
-			}
-		},
-		{
-			"conditionName" : "Button01Released",
-			"condition" : {
-				"operator" : "=",
-				"value" : 0
-			}					
-		}
-	],
-	"params" : {
-		"pin" : 18
-	}
-};
+// var exampleEventConfig1 = {
+// 	"listenerName" : "Button01",
+// 	"plugin" : "Gpio",
+// 	"ip" : "127.0.0.1",
+// 	"conditions" : [
+// 		{
+// 			"conditionName" : "Button01Pressed",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : 1
+// 			}
+// 		},
+// 		{
+// 			"conditionName" : "Button01Released",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : 0
+// 			}					
+// 		}
+// 	],
+// 	"params" : {
+// 		"pin" : 18
+// 	}
+// };
 
-var exampleEventConfig2 = {
-	"listenerName" : "UIButton01",
-	"plugin" : "UI",
-	"ip" : "127.0.0.1",
-	"conditions" : [
-		{
-			"conditionName" : "pressed"
-		}
-	],
-	"params" : {
-		"uiName" : "buttonActivatePhysicalLightSwitch"
-	}
-}
-var exampleEventConfig3 = {
-	"listenerName" : "LightSensor",
-	"plugin" : "Arduino",
-	"ip" : "127.0.0.1",
-	"conditions" : [
-		{
-			"conditionName" : "lightSensor",
-			"condition" : {
-				"operator" : ">=",
-				"value" : 0
-			}
-		}
-	],
-	"params" : {
-		"pin" : 'A5',
-		"interval" : 1000
-	}
-};
+// var exampleEventConfig2 = {
+// 	"listenerName" : "UIButton01",
+// 	"plugin" : "UI",
+// 	"ip" : "127.0.0.1",
+// 	"conditions" : [
+// 		{
+// 			"conditionName" : "pressed"
+// 		}
+// 	],
+// 	"params" : {
+// 		"uiName" : "buttonActivatePhysicalLightSwitch"
+// 	}
+// }
+// var exampleEventConfig3 = {
+// 	"listenerName" : "LightSensor",
+// 	"plugin" : "Arduino",
+// 	"ip" : "127.0.0.1",
+// 	"conditions" : [
+// 		{
+// 			"conditionName" : "lightSensor",
+// 			"condition" : {
+// 				"operator" : ">=",
+// 				"value" : 0
+// 			}
+// 		}
+// 	],
+// 	"params" : {
+// 		"pin" : 'A5',
+// 		"interval" : 1000
+// 	}
+// };
 
-var exampleEventConfig4 = {
-	"listenerName" : "RemoteControl",
-	"plugin" : "plugin433",
-	"ip" : "127.0.0.1",
-	"conditions" : [
-		{
-			"conditionName" : "01_on",
-			"condition" : {
-				"operator" : "=",
-				"value" : "1000100000001"
-			}
-		},
-		{
-			"conditionName" : "01_off",
-			"condition" : {
-				"operator" : "=",
-				"value" : "1000100000011"
-			}					
-		},
-		{
-			"conditionName" : "02_on",
-			"condition" : {
-				"operator" : "=",
-				"value" : "1000010000001"
-			}					
-		},
-		{
-			"conditionName" : "02_off",
-			"condition" : {
-				"operator" : "=",
-				"value" : "1000010000011"
-			}					
-		}
-	],
-	"params" : {
-		"pin" : 18
-	}
-};
+// var exampleEventConfig4 = {
+// 	"listenerName" : "RemoteControl",
+// 	"plugin" : "plugin433",
+// 	"ip" : "127.0.0.1",
+// 	"conditions" : [
+// 		{
+// 			"conditionName" : "01_on",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : "1000100000001"
+// 			}
+// 		},
+// 		{
+// 			"conditionName" : "01_off",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : "1000100000011"
+// 			}					
+// 		},
+// 		{
+// 			"conditionName" : "02_on",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : "1000010000001"
+// 			}					
+// 		},
+// 		{
+// 			"conditionName" : "02_off",
+// 			"condition" : {
+// 				"operator" : "=",
+// 				"value" : "1000010000011"
+// 			}					
+// 		}
+// 	],
+// 	"params" : {
+// 		"pin" : 18
+// 	}
+// };
 
 
-var exampleTask1 = {
-	"taskId" : "SwitchOnLED",
-	"host" : "127.0.0.1",
-	"plugin" : "Gpio",
-	"params" : {
-		"direction" : 'out',
-		"pin" : 27,
-		"value" : 0
-	}
-};
+// var exampleTask1 = {
+// 	"taskId" : "SwitchOnLED",
+// 	"host" : "127.0.0.1",
+// 	"plugin" : "Gpio",
+// 	"params" : {
+// 		"direction" : 'out',
+// 		"pin" : 27,
+// 		"value" : 0
+// 	}
+// };
 
-var exampleTask2 = {
-	"taskId" : "SwitchOffLED",
-	"host" : "127.0.0.1",
-	"plugin" : "Gpio",
-	"params" : {
-		"direction" : 'out',
-		"pin" : 27,
-		"value" : 1
-	}
-};
+// var exampleTask2 = {
+// 	"taskId" : "SwitchOffLED",
+// 	"host" : "127.0.0.1",
+// 	"plugin" : "Gpio",
+// 	"params" : {
+// 		"direction" : 'out',
+// 		"pin" : 27,
+// 		"value" : 1
+// 	}
+// };
 
-var exampleTask3 = {
-	"taskId" : "SwitchOnPower",
-	"host" : "127.0.0.1",
-	"plugin" : "plugin433",
-	"params" : {
-		"grpId" : 1,
-		"deviceId" : 1,
-		"value" : 1
-	}
-};
-var exampleTask4 = {
-	"taskId" : "SwitchOffPower",
-	"host" : "127.0.0.1",
-	"plugin" : "plugin433",
-	"params" : {
-		"grpId" : 1,
-		"deviceId" : 1,
-		"value" : 0
-	}
-};
+// var exampleTask3 = {
+// 	"taskId" : "SwitchOnPower",
+// 	"host" : "127.0.0.1",
+// 	"plugin" : "plugin433",
+// 	"params" : {
+// 		"grpId" : 1,
+// 		"deviceId" : 1,
+// 		"value" : 1
+// 	}
+// };
+// var exampleTask4 = {
+// 	"taskId" : "SwitchOffPower",
+// 	"host" : "127.0.0.1",
+// 	"plugin" : "plugin433",
+// 	"params" : {
+// 		"grpId" : 1,
+// 		"deviceId" : 1,
+// 		"value" : 0
+// 	}
+// };
 
-var exampleTask5 = {
-	"taskId" : "setUIButtonStatusOn",
-	"host" : "127.0.0.1",
-	"plugin" : "UI",
-	"params" : {
-		"type" : "text",
-		"name" : "Status Licht"
-	}
-};
+// var exampleTask5 = {
+// 	"taskId" : "setUIButtonStatusOn",
+// 	"host" : "127.0.0.1",
+// 	"plugin" : "UI",
+// 	"params" : {
+// 		"type" : "text",
+// 		"name" : "Status Licht"
+// 	}
+// };
 
-var exampleFrontpageItem1 = {
-	"name" : "labelLightStatus",
-	"type" : "label",
-	"description" : "Light status",
-	"params" : {
-		"value" : 0
-	}
-}
-var exampleFrontpageItem2 = {
-	"name" : "buttonActivatePhysicalLightSwitch",
-	"type" : "button",
-	"description" : "Activate the physical Button for 5 seconds",
-	"params" : {
-		"text" : "Activate"
-	}
-}
+// var exampleFrontpageItem1 = {
+// 	"name" : "labelLightStatus",
+// 	"type" : "label",
+// 	"description" : "Light status",
+// 	"params" : {
+// 		"value" : 0
+// 	}
+// }
+// var exampleFrontpageItem2 = {
+// 	"name" : "buttonActivatePhysicalLightSwitch",
+// 	"type" : "button",
+// 	"description" : "Activate the physical Button for 5 seconds",
+// 	"params" : {
+// 		"text" : "Activate"
+// 	}
+// }
 
-var exampleTaskGroup1 = {
-	"taskGroupId" : "SwitchAllOn",
-	"tasks" : ["SwitchOnLED","SwitchOnPower"]
-}
-var exampleTaskGroup2 = {
-	"taskGroupId" : "SwitchAllOff",
-	"tasks" : ["SwitchOffLED","SwitchOffPower"]
-}
+// var exampleTaskGroup1 = {
+// 	"taskGroupId" : "SwitchAllOn",
+// 	"tasks" : ["SwitchOnLED","SwitchOnPower"]
+// }
+// var exampleTaskGroup2 = {
+// 	"taskGroupId" : "SwitchAllOff",
+// 	"tasks" : ["SwitchOffLED","SwitchOffPower"]
+// }
 
-var exampleEventGroup1 = {
-	"eventGroupId" : "EventLightOn",
-	"events" : [
-	{
-		"listenerName" : "Button01",
-		"conditionName" : "Button01Pressed",
-		"timeDifference" : "0"
-	},
-	{
-		"listenerName" : "UIButton01",
-		"conditionName" : "pressed",
-		"timeDifference" : "5000"
-	}
-	],
-	"taskGroups" : ["SwitchAllOn"]
-}
+// var exampleEventGroup1 = {
+// 	"eventGroupId" : "EventLightOn",
+// 	"events" : [
+// 	{
+// 		"listenerName" : "Button01",
+// 		"conditionName" : "Button01Pressed",
+// 		"timeDifference" : "0"
+// 	},
+// 	{
+// 		"listenerName" : "UIButton01",
+// 		"conditionName" : "pressed",
+// 		"timeDifference" : "5000"
+// 	}
+// 	],
+// 	"taskGroups" : ["SwitchAllOn"]
+// }
 
-var exampleEventGroup2 = {
-	"eventGroupId" : "EventLightOff",
-	"events" : [
-	{
-		"listenerName" : "Button01",
-		"conditionName" : "Button01Released",
-		"timeDifference" : "0"
-	},
-	{
-		"listenerName" : "UIButton01",
-		"conditionName" : "pressed",
-		"timeDifference" : "5000"
-	}
-	],
-	"taskGroups" : ["SwitchAllOff"]
-}
+// var exampleEventGroup2 = {
+// 	"eventGroupId" : "EventLightOff",
+// 	"events" : [
+// 	{
+// 		"listenerName" : "Button01",
+// 		"conditionName" : "Button01Released",
+// 		"timeDifference" : "0"
+// 	},
+// 	{
+// 		"listenerName" : "UIButton01",
+// 		"conditionName" : "pressed",
+// 		"timeDifference" : "5000"
+// 	}
+// 	],
+// 	"taskGroups" : ["SwitchAllOff"]
+// }
 
-var exampleEventGroup3 = {
-	"eventGroupId" : "EventLightOn",
-	"events" : 
-	[
-	{
-		"listenerName" : "UIButton01",
-		"conditionName" : "pressed",
-		"timeDifference" : "0"
-	}
-	],
-	"taskGroups" : ["SwitchAllOn"]
-}
+// var exampleEventGroup3 = {
+// 	"eventGroupId" : "EventLightOn",
+// 	"events" : 
+// 	[
+// 	{
+// 		"listenerName" : "UIButton01",
+// 		"conditionName" : "pressed",
+// 		"timeDifference" : "0"
+// 	}
+// 	],
+// 	"taskGroups" : ["SwitchAllOn"]
+// }
 
 process.on( 'SIGINT', function() {
   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
@@ -271,7 +271,7 @@ executeDbCommand(function() {
 	// addEventConfig(exampleEventConfig1, function() {});
 	// addEventConfig(exampleEventConfig2, function() {});
 	// addEventConfig(exampleEventConfig3, function() {});
-	addEventConfig(exampleEventConfig4, function() {});
+	// addEventConfig(exampleEventConfig4, function() {});
 
 	// addFrontpageItem(exampleFrontpageItem1, function() {});
 	// addFrontpageItem(exampleFrontpageItem2, function() {});

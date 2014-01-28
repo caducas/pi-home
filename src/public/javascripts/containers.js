@@ -76,7 +76,6 @@ function addElement() {
 		}
 	}
 	activeContainer.elements.push({"name":document.getElementById("selectElementName").value,"pos":activeContainer.elements.length+1});
-	console.log(activeContainer);
 
 	refreshElementsList();
 }
@@ -113,9 +112,7 @@ socket.on('getElementNames', function(result) {
 	for(var i in result) {
 		selectElementName += '<option>'+result[i].name+'</option>';
 	}
-	console.log(selectElementName);
 	$("#divSelectElementName").html(selectElementName);
-
 });
 
 $(document).ready(function(){

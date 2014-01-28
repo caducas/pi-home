@@ -39,7 +39,6 @@ function saveEventListenerConfig() {
 	activeEventConfig.ip = document.getElementById("txtListenerIp").value;
 	activeEventConfig.plugin = document.getElementById("txtListenerPlugin").value;
 	activeEventConfig.variable = document.getElementById("txtListenerVariable").value;
-	console.log("activeEventConfig set");
 
 	try {
 		for(var i in activeEventConfig.params) {
@@ -50,7 +49,6 @@ function saveEventListenerConfig() {
 	}
 
 	socket.emit('updateEventListenerConfig',activeEventConfig);
-	console.log("event to update sent");
 	$("#eventGroupConfig").hide();
 	$("#addNewEvent").show();
 }
@@ -66,7 +64,14 @@ function refreshPluginList(pluginList) {
 }
 
 function pluginChanged() {
+
+	//delete existing conditions if plugin is set to UI or set to other plugin from UI
+	if(activeEventConfig.plugin === 'UI' || document.getElementById('txtListenerPlugin').value) {
+		activeEventConfig.conditions = [];
+	}
+
 	activeEventConfig.plugin = document.getElementById('txtListenerPlugin').value;
+
 	activeEventConfig.params = {};
 	
 	var elements = [];
@@ -81,7 +86,7 @@ function pluginChanged() {
 			var elementsId = element[i].id;
 			if(elementsId !== undefined && elementsId.slice(0,checkString.length)===checkString) {
 				var paramName = elementsId.slice(-((elementsId.length-(checkString.length+1))));
-				activeEventConfig.params[paramName] = "test";
+				activeEventConfig.params[paramName] = "";
 			}
 		}
 	}
@@ -99,7 +104,6 @@ function refreshPluginParams() {
 	});
 
 	for(var i in activeEventConfig.params) {
-		console.log(i);
 		document.getElementById("setting_"+activeEventConfig.plugin+"_"+i).value = activeEventConfig.params[i];
 	}
 
@@ -111,14 +115,12 @@ function refreshConditionList() {
 	if(activeEventConfig.plugin !== "UI") {
 	    var conditionListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Condition name</th><th>Operator</th><th>value</th><th>Remove</th></tr></thead><tbody>';
 	    for(var i in activeEventConfig.conditions) {
-	    	// if(activeEventConfig.conditions[i].condition.operator !== 'undefined' && activeEventConfig.conditions[i].condition.value !== 'undefined') {}
-		    	conditionListHtml += '<tr>';
-		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
-		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.operator+'</td>';
-		    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.value+'</td>';
-		    	conditionListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
-		    	conditionListHtml += '</tr>';
-		    // }
+	    	conditionListHtml += '<tr>';
+	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
+	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.operator+'</td>';
+	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.value+'</td>';
+	    	conditionListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
+	    	conditionListHtml += '</tr>';
 	    }
 	    conditionListHtml += '<tr>';
 	    conditionListHtml += '<td><input type="text" id="inputListenerName" value="" class="form-control" /></td>';
@@ -137,39 +139,27 @@ function refreshConditionList() {
 		$("#conditionList").html(conditionListHtml);
 
 	} else {
+	    if(activeEventConfig.conditions.length===0) {
+	    	var newCondition = {
+	    		conditionName : 'pressed'
+	    	};
+
+	    	activeEventConfig.conditions.push(newCondition);
+	    }
 	    var conditionListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Condition name</th></tr></thead><tbody>';
 	    for(var i in activeEventConfig.conditions) {
 	    	conditionListHtml += '<tr>';
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
 	    	conditionListHtml += '</tr>';
 	    }
-	    conditionListHtml += '<tr>';
-	    conditionListHtml += '<td><select class="form-control pull-right" id="inputListenerName">';
-	    conditionListHtml += '<option>pressed</option>';
-	    conditionListHtml += '</select></td>';
-	    conditionListHtml += '<td><input type="button" class="btn btn-default" value="Add" onclick="addCondition()" /></td>';
-	    conditionListHtml += '</tr>';
 	    conditionListHtml += '</tbody></table>';
 		$("#conditionList").html(conditionListHtml);
 	}
-
-	// $('div[id^=eventListenerConditions_]').filter(function() {
-	// 	return /^eventListenerConditions_/.test(this.id);
-	// }).each(function() {
-	// 	$("#"+this.id).hide();
-	// });
-
-	// $("#eventListenerConditions_"+activeEventConfig.plugin).show();
 }
 
 function addCondition() {
 	var newCondition = {
 		conditionName : document.getElementById("inputListenerName").value
-		// ,
-		// condition : {
-		// 	operator : document.getElementById("selectConditionOperator").value,
-		// 	value : document.getElementById("inputConditionValue").value
-		// }
 	};
 
 	if(activeEventConfig.plugin !== "UI") {

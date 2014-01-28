@@ -9,7 +9,7 @@ function createNewTask() {
 	activeTaskConfig = {
 		"taskId" : "",
 		"host" : "127.0.0.1",
-		"plugin" : "Gpio",
+		"plugin" : "",
 		"params" : {
 		}
 	};
@@ -49,7 +49,7 @@ function pluginChanged() {
 			var elementsId = element[i].id;
 			if(elementsId !== undefined && elementsId.slice(0,checkString.length)===checkString) {
 				var paramName = elementsId.slice(-((elementsId.length-(checkString.length+1))));
-				activeTaskConfig.params[paramName] = "test";
+				activeTaskConfig.params[paramName] = "";
 			}
 		}
 	}
@@ -66,7 +66,6 @@ function refreshPluginParams() {
 	});
 
 	for(var i in activeTaskConfig.params) {
-		console.log(i);
 		document.getElementById("setting_"+activeTaskConfig.plugin+"_"+i).value = activeTaskConfig.params[i];
 	}
 

@@ -1,18 +1,6 @@
 var socket = io.connect();
 var activeTaskGroupConfig;
 
-
-
-$(document).ready(function(){
-	$("#taskGroupConfig").hide();
-	$("#saveTaskGroupConfig").click(function() {saveTaskGroupConfig();});
-   	$("#cancelTaskGroupConfig").click(function() {cancelTaskGroupConfig();});
-   	$('#removeFromTaskList').click(function() {removeFromTaskList();});
-   	$("#addToTaskList").click(function() {addToTaskList();});
-   	$('#newTaskGroup').click(function() {createNewTaskGroup();});
-   	$('#removeTaskGroup').click(function() {removeTaskGroup();});
-});
-
 function removeTaskGroup() {
 	socket.emit('removeTaskGroup', activeTaskGroupConfig._id);
 }
@@ -21,28 +9,38 @@ function configureTaskGroup(taskGroupId) {
 	socket.emit('getTaskGroupConfig', taskGroupId);
 }
 
-function addToTaskList() {
+function addTask() {
 	var toAdd = document.getElementById("selectUnassignedTask").value;
+
+	for(var i in activeTaskGroupConfig.tasks) {
+		if(activeTaskGroupConfig.tasks[i] === toAdd) {
+			alert("Task is already in taskGroup!");
+			return;
+		}
+	}
 	activeTaskGroupConfig.tasks.push(toAdd);
+
 	refreshTaskList();
 	socket.emit('updateUnassignedTaskList', activeTaskGroupConfig.tasks);
 }
 
-function removeFromTaskList() {
-	var toRemove = document.getElementById("assignedTaskList").value;
-	var index = activeTaskGroupConfig.tasks.indexOf(toRemove);
-	activeTaskGroupConfig.tasks.splice(index,1);
+function removeTaskFromTaskGroup(pos) {
+	activeTaskGroupConfig.tasks.splice(pos,1);
+
 	refreshTaskList();
-	socket.emit('updateUnassignedTaskList', activeTaskGroupConfig.tasks);
 }
 
 function refreshTaskList() {
 
-    var taskListHtml = '<select class="form-control" id="assignedTaskList" size="'+activeTaskGroupConfig.tasks.length+'">';
+
+    var taskListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Task</th><th>Remove</th></tr></thead><tbody>';
     for(var i in activeTaskGroupConfig.tasks) {
-    	taskListHtml += '<option>'+activeTaskGroupConfig.tasks[i]+'</option>';
+    	taskListHtml += '<tr>';
+    	taskListHtml += '<td>'+activeTaskGroupConfig.tasks[i]+'</td>';
+    	taskListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeTaskFromTaskGroup(' + i + ')" /></td>';
+    	taskListHtml += '</tr>';
     }
-    taskListHtml += '</select>';
+    taskListHtml += '</tbody></table>';
 	$("#taskList").html(taskListHtml);
 }
 
@@ -98,9 +96,18 @@ socket.on('getUnassignedTaskList', function(result) {
 	for(var i in result) {
 		unassignedTaskListHtml += '<option>'+result[i].taskId+'</option>';
 	}
-	$("#unassignedTaskList").html(unassignedTaskListHtml);
+	$("#divSelectTaskName").html(unassignedTaskListHtml);
 });
 
 socket.on('removedTaskGroup', function() {
 	cancelTaskGroupConfig();
+});
+
+$(document).ready(function(){
+	$("#taskGroupConfig").hide();
+	$("#saveTaskGroupConfig").click(function() {saveTaskGroupConfig();});
+   	$("#cancelTaskGroupConfig").click(function() {cancelTaskGroupConfig();});
+   	$("#addTask").click(function() {addTask();});
+   	$('#newTaskGroup').click(function() {createNewTaskGroup();});
+   	$('#removeTaskGroup').click(function() {removeTaskGroup();});
 });
