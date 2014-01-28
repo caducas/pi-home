@@ -4,7 +4,6 @@
 * @class Server
 */
 var networkCommunicator = require(__dirname + '/NetworkCommunicator');
-var eventConfig = require(__dirname + '/../config/config.json');
 var dbHelper = require(__dirname + '/DBHelper');
 var frontend = require(__dirname + '/Frontend');
 var async = require('async');
@@ -12,16 +11,6 @@ var pluginHelper = require('./PluginHelper');
 
 //starts network server to enable clients to connect
 networkCommunicator.startServer();
-
-/**
-* Setter for eventConfig (for testing purpose).
-*
-* @method setEventConfig
-* @param {Object} newEventConfig The configuration as JSON-Object.
-*/
-function setEventConfig(newEventConfig) {
-	eventConfig = newEventConfig;
-}
 
 //Event when client connected to server - sends configuration to client
 process.on('#clientConnected', function(ip) {

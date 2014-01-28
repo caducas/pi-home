@@ -65,11 +65,15 @@ app.get('/', function(req, res){
 
 		socket.on('getFrontpageItem', function(item) {
 			console.log("FRONTEND: received request for frontpageItem");
-			var plugin = pluginHelper.getPlugin(item.type);
-			plugin.getFrontpageItem(item, function(frontpageItem) {
-				console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
-				socket.emit('getFrontpageItem', item, frontpageItem);
-			});
+			try{
+				var plugin = pluginHelper.getPlugin(item.type);
+				plugin.getFrontpageItem(item, function(frontpageItem) {
+					console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
+					socket.emit('getFrontpageItem', item, frontpageItem);
+				});
+			} catch(err) {
+				console.log(err);
+			}
 		});
 
 		socket.on('loadSite', function(siteId) {
@@ -130,11 +134,15 @@ app.get('/site', function(req, res) {
 		
 		socket.on('getFrontpageItem', function(item) {
 			console.log("FRONTEND: received request for frontpageItem");
-			var plugin = pluginHelper.getPlugin(item.type);
-			plugin.getFrontpageItem(item, function(frontpageItem) {
-				console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
-				socket.emit('getFrontpageItem', item, frontpageItem);
-			});
+			try{
+				var plugin = pluginHelper.getPlugin(item.type);
+				plugin.getFrontpageItem(item, function(frontpageItem) {
+					console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
+					socket.emit('getFrontpageItem', item, frontpageItem);
+				});
+			} catch(err) {
+				console.log(err);
+			}
 		});
 
 	});

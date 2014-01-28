@@ -56,7 +56,11 @@ function getListOfPlugins() {
 function getPlugin(pluginName) {
 	console.log(path+pluginName+'/'+pluginName);
 	console.log('will get plugin now');
-	plugin = require(path+pluginName+'/'+pluginName);
+	try {
+		plugin = require(path+pluginName+'/'+pluginName);
+	} catch(err) {
+		return undefined;
+	}
 	console.log('plugin');
 	console.log(plugin);
 	return plugin;
