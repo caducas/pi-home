@@ -239,7 +239,7 @@ process.on( 'SIGINT', function() {
   process.exit( );
 })
 
-executeDbCommand(function() {
+// executeDbCommand(function() {
 
 	// setEventConfig("127.0.0.1", realTestConfig);
 
@@ -276,7 +276,7 @@ executeDbCommand(function() {
 	// addFrontpageItem(exampleFrontpageItem1, function() {});
 	// addFrontpageItem(exampleFrontpageItem2, function() {});
 
-});
+// });
 
 
 
@@ -306,7 +306,7 @@ function getFrontpageItems(callback) {
 }
 
 function getFrontpageItemsList(callback) {
-	db.collection('frontend').find({},{name:1}).toArray(function(err, docs) {
+	db.collection('frontend').find({},{name:1}).sort({name:1}).toArray(function(err, docs) {
 		callback(docs);
 	});	
 }
@@ -381,7 +381,7 @@ function removeFrontpageItemConfig(frontpageItemId, callback) {
 //--------------------------------------------------------------------------------------
 
 function getSitesList(callback) {
-	db.collection('sites').find({},{name:1}).toArray(function(err, docs) {
+	db.collection('sites').find({},{name:1}).sort({name:1}).toArray(function(err, docs) {
 		callback(docs);
 	});	
 }
@@ -434,7 +434,7 @@ function removeSite(siteId, callback) {
 //--------------------------------------------------------------------------------------
 
 function getContainersList(callback) {
-	db.collection('containers').find({},{name:1}).toArray(function(err, docs) {
+	db.collection('containers').find({},{name:1}).sort({name:1}).toArray(function(err, docs) {
 		callback(docs);
 	});	
 }
@@ -509,7 +509,7 @@ function removeContainer(containerId, callback) {
 //--------------------------------------------------------------------------------------
 
 function getUIEventNames(callback) {
-	db.collection('frontend').find({type:"button"},{name:1,_id:0}).toArray(function(err, docs) {
+	db.collection('frontend').find({type:"button"},{name:1,_id:0}).sort({name:1}).toArray(function(err, docs) {
 		callback(docs);
 	});
 }
@@ -778,7 +778,7 @@ function removeTaskConfig(taskId, callback) {
 
 function getTaskList(callback) {
 	executeDbCommand(function() {
-		db.collection('tasks').find({},{taskId:1,_id:0}).toArray(function(err, docs) {
+		db.collection('tasks').find({},{taskId:1,_id:0}).sort({taskId:1}).toArray(function(err, docs) {
 			callback(docs);
 		});
 	});
@@ -948,7 +948,7 @@ function getVariable(variableName, callback) {
 
 function getVariableList(callback) {
 	executeDbCommand(function() {
-		db.collection('variables').find({},{name:1,_id:0}).toArray(function(err, docs) {
+		db.collection('variables').find({},{name:1,_id:0}).sort({name:1}).toArray(function(err, docs) {
 			callback(docs);
 		});
 	});
@@ -993,7 +993,7 @@ function getUnassignedTaskList(taskGroupId, callback) {
 
 function getTaskGroupList(callback) {
 	executeDbCommand(function() {
-		db.collection('taskGroups').find({},{taskGroupId:1,_id:0}).toArray(function(err, docs) {
+		db.collection('taskGroups').find({},{taskGroupId:1,_id:0}).sort({taskGroupId:1}).toArray(function(err, docs) {
 			callback(docs);
 		});
 	});
@@ -1001,7 +1001,7 @@ function getTaskGroupList(callback) {
 
 function getEventGroupList(callback) {
 	executeDbCommand(function() {
-		db.collection('eventGroups').find({},{eventGroupId:1,_id:0}).toArray(function(err, docs) {
+		db.collection('eventGroups').find({},{eventGroupId:1,_id:0}).sort({eventGroupId:1}).toArray(function(err, docs) {
 			callback(docs);
 		});
 	});
