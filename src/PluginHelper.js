@@ -54,6 +54,7 @@ function getListOfPlugins() {
 * @return {Object} The plugin.
 */
 function getPlugin(pluginName) {
+	var plugin;
 	console.log(path+pluginName+'/'+pluginName);
 	console.log('will get plugin now');
 	try {

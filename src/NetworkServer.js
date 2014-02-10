@@ -28,7 +28,7 @@ function startServer() {
 		process.emit('#clientConnected',clientIp);
 
 		socket.on('message', function(message) {
-			console.log('DATA received from ' + clientIp + ': ' + message);
+			// console.log('DATA received from ' + clientIp + ': ' + message);
 			if(message.command === 'event') {
 				process.emit('#eventCatched', message);
 			}
@@ -50,7 +50,7 @@ function startServer() {
 * @param {Object} message The JSON object to send.
 */
 function sendMessage(recipient,message) {
-	console.log(message);
+	// console.log(message);
 	try {
 		clients[recipient].sendMessage(message);
 	} catch(err) {

@@ -3,7 +3,9 @@
 }
 
 .well {
-	/*border-radius: 0px;*/
+	padding:0px;
+	padding-top: 2px;
+	padding-bottom: 20px;
 }
 
 .well-header {
@@ -25,4 +27,139 @@
 	/*border-radius: 4px;*/
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.well-header-site {
+	margin-left: 0;
+	margin-top: -3px;
+	/*border-radius-top-left: 4px;
+	background-color: #373737;
+	color: #e3e3e3;*/
+}
+
+.config-box {
+	border-radius:0px;
+}
+
+.elements-list-header {
+	margin-bottom: -2px;
+}
+
+
+
+.config-button {
+	margin-top: -3px;
+	margin-right: -1px;
+}
+
+.panel {
+	margin-bottom: -2px;
+	border-radius: 0px;
+}
+
+.config-content {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.config-title-input {
+	background: transparent;
+	width: 60%;
+	float: left !important;
+	border: 0;
+	box-shadow: none;
+	font-size: 21px;
+}
+
+legend {
+	border-bottom: 1px solid #080808;
+}
+
+.btn-default  {
+	border-radius: 0px;
+	background-color: #222222;
+	border-color: #080808;
+	color: #999999;	
+}
+
+.form-control {
+	border-radius: 0px;
+}
+
+.table {
+	margin-bottom: 20px;
+}
+
+thead {
+	background-color: #333333;
+	color: #999999;	
+}
+
+.table-bordered {
+	border-color: #080808;	
+}
+
+.table > tbody > tr > td {
+	border-top: 0;
+	padding: 0px;
+}
+
+table {
+	border-color: #080808;
+}
+
+.config-table-list-content {
+	width: 100%;
+	padding: 6px !important;
+}
+
+.table > thead > tr > th {
+	border-bottom: 0;
+}
+
+.button-config-list {
+	width: 100%;
+}
+
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+	border-radius: 0;
+}
+
+input[type="radio"] {
+	margin: 0;
+}
+
+.ui-btn.ui-btn-b.ui-btn-active.ui-radio-on {
+	background-color: #009245;
+	border-color: #54cc60;
+	color: #ffffff;
+	text-shadow: 0 1px 0 #444444;
+}
+
+.ui-btn.ui-btn-b.ui-btn-active.ui-radio-off {
+	background-color: #ed1c24;
+	border-color: #820f13;
+	color: #ffffff;
+	text-shadow: 0 1px 0 #444444;
+}
+
+.button-video-control-left {
+	margin-left: -80px;
+}
+.button-video-control-right {
+	margin-left: 40px;
+}
+.button-video-control-up {
+	margin-left: -40px;
+}
+.button-video-control-down {
+	margin-top: 69px;
+	margin-left: 50px;
+}
+
+.ui-btn {
+	font-size: 14px;
 }

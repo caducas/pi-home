@@ -3,6 +3,7 @@ var activeTaskGroupConfig;
 
 function removeTaskGroup() {
 	socket.emit('removeTaskGroup', activeTaskGroupConfig._id);
+	$("#newTaskGroup").show();
 }
 
 function configureTaskGroup(taskGroupId) {
@@ -33,13 +34,14 @@ function removeTaskFromTaskGroup(pos) {
 function refreshTaskList() {
 
 
-    var taskListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Task</th><th>Remove</th></tr></thead><tbody>';
+    var taskListHtml = '<table class="table table-striped table-hover"><thead><tr><th colspan="2">Tasks</th></tr></thead><tbody>';
     for(var i in activeTaskGroupConfig.tasks) {
     	taskListHtml += '<tr>';
-    	taskListHtml += '<td>'+activeTaskGroupConfig.tasks[i]+'</td>';
-    	taskListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeTaskFromTaskGroup(' + i + ')" /></td>';
+    	taskListHtml += '<td class="config-table-list-content">'+activeTaskGroupConfig.tasks[i]+'</td>';
+    	taskListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeTaskFromTaskGroup(' + i + ')" /></td>';
     	taskListHtml += '</tr>';
     }
+    taskListHtml += '<tr><td><div id="divSelectTaskName"></div></td><td><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addTask()" /></td></tr>'
     taskListHtml += '</tbody></table>';
 	$("#taskList").html(taskListHtml);
 }
@@ -48,16 +50,18 @@ function saveTaskGroupConfig() {
 	activeTaskGroupConfig.taskGroupId = document.getElementById("txtTaskGroupId").value;
 	socket.emit('updateTaskGroupConfig',activeTaskGroupConfig);
 	$("#taskGroupConfig").hide();
+	$("#newTaskGroup").show();
 }
 
 function cancelTaskGroupConfig() {
 	activeTaskGroupConfig = null;
 	$("#taskGroupConfig").hide();
+	$("#newTaskGroup").show();
 }
 
 function createNewTaskGroup() {
 	activeTaskGroupConfig = {
-			taskGroupId : "",
+			taskGroupId : "Taskgroup-Name",
 			tasks : []
 	};
 	socket.emit('updateUnassignedTaskList');
@@ -72,6 +76,7 @@ function showTaskGroupConfig() {
 	refreshTaskList();
 
 	$("#taskGroupConfig").show();
+	$("#newTaskGroup").hide();
 }
 
 socket.on('taskGroupsIdList', function(data) {

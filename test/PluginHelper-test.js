@@ -53,6 +53,9 @@ describe('PluginHelper', function(){
 		//assertion
 		assert.equal(plugin1.test(),1,"returned wrong plugin");
 		assert.equal(plugin2.test(),2,"returned wrong plugin");
-		assert.include(error.message, "Cannot find module");
+		assert.equal(plugin3, undefined, "Cannot find module");
+	});
+	afterEach(function() {
+		process.removeAllListeners();
 	});
 });

@@ -3,7 +3,7 @@ var activeSite;
 
 function createSite() {
 	activeSite = {
-		"name" : "",
+		"name" : "Site-Name",
 		"description" : "",
 		"containers" : []
 	};
@@ -18,6 +18,7 @@ function refreshSite() {
 	socket.emit('getContainerNames');
 
 	$("#siteConfig").show();
+	$("#newSite").hide();
 }
 
 function saveSite() {
@@ -25,6 +26,7 @@ function saveSite() {
 	activeSite.description = document.getElementById("txtDescription").value;
 
 	socket.emit('updateSite',activeSite);
+	$("#newSite").show();
 }
 
 function configureSite(id) {
@@ -35,30 +37,36 @@ function configureSite(id) {
 function cancelSite() {
 	activeSite = null;
 	$("#siteConfig").hide();
+	$("#newSite").show();
 }
 
 function removeSite() {
 	socket.emit('removeSite', activeSite._id);
 	$("#siteConfig").hide();
+	$("#newSite").show();
 }
 
 function refreshContainersList() {
 
-    var containersListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Position</th><th>Container Name</th><th>Remove</th></tr></thead><tbody>';
+    var containersListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Position</th><th>Container Name</th><th colspan="3"></th></tr></thead><tbody>';
     for(var i in activeSite.containers) {
     	containersListHtml += '<tr>';
     	containersListHtml += '<td>'+activeSite.containers[i].pos+'</td>';
     	containersListHtml += '<td>'+activeSite.containers[i].name+'</td>';
-    	containersListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeContainerFromSite(' + i + ')" />';
+    	containersListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeContainerFromSite(' + i + ')" />';
+    	containersListHtml += '<td>';
     	if(activeSite.containers[i].pos>1) {
-	    	containersListHtml += '<input type="button" class="btn btn-default" value="Up" onclick="moveContainerUp(' + i + ')" />';
+	    	containersListHtml += '<input type="button" class="btn btn-default button-config-list" value="Up" onclick="moveContainerUp(' + i + ')" />';
 	    }
+    	containersListHtml += '</td><td>';
     	if(activeSite.containers[i].pos<activeSite.containers.length) {
-	    	containersListHtml += '<input type="button" class="btn btn-default" value="Down" onclick="moveContainerDown(' + i + ')" />';
+	    	containersListHtml += '<input type="button" class="btn btn-default button-config-list" value="Down" onclick="moveContainerDown(' + i + ')" />';
 	    }
     	containersListHtml += '</td>';
     	containersListHtml += '</tr>';
     }
+    containersListHtml += '<tr><td></td><td><div id="divSelectContainerName">'+$("#divSelectContainerName").html()+'</div></td>';
+    containersListHtml += '<td colspan="3"><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addContainer()" /></td></tr>'
     containersListHtml += '</tbody></table>';
 	$("#containersList").html(containersListHtml);
 }

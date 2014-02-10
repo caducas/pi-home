@@ -28,7 +28,7 @@ function startServer() {
 function startClient(ip, port) {
 
 	client = require(__dirname + '/NetworkClient');
-	console.log("starting connecting");
+	// console.log("starting connecting");
 
 	client.startClient(ip,port, function(ip, port) {
 		console.log("connection to "+ip+":"+port+" failed - trying to connect in 10 sec...");
@@ -37,7 +37,7 @@ function startClient(ip, port) {
 		},10000);
 
 	});
-	console.log("should be connecting");
+	// console.log("should be connecting");
 }
 
 /**

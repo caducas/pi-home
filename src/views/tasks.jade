@@ -2,7 +2,8 @@ doctype html
 html
    head
       title= Tasks
-      link(rel='stylesheet', href='/css/bootstrap.css')
+      link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
+      link(rel='stylesheet', href='/css/pihome.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
       meta(name='viewport',content='width=device-width,initial-scale=1.0')
@@ -13,28 +14,24 @@ html
          div#addNewTask
             input(type='button' class='btn btn-default' value='New task')#addNewTask
          div(class='col-lg-6')#taskConfig
-            div(class='well')
+            div(class='well config-box')
                form(class='bs-example form-horizontal')
                   fieldset
-                     legend Configuration
+                     legend
+                        input(type='text' value='Task-Name' class='form-control config-title-input')#txtTaskId
+                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveTaskConfig
+                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelTaskConfig
+                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeTaskConfig
+                        &nbsp;
                      div(class='form-group')
-                        label(class='col-lg-2 control-label' for='txtTaskId') TaskId
-                        div(class='col-lg-10')
-                           input(type='text' id='txtTaskId' value='' class='form-control')
-                     div(class='form-group')
-                        label(class='col-lg-2 control-label' for='txtHost') Host-IP
-                        div(class='col-lg-10')
+                        label(class='col-lg-3 control-label' for='txtHost') Host-IP
+                        div(class='col-lg-8')
                            input(type='text' id='txtHost' value='' class='form-control')
                      div(class='form-group')
-                        label(class='col-lg-2 control-label' for='txtPlugin') Plugin-Name
-                        div(class='col-lg-10')
+                        label(class='col-lg-3 control-label' for='txtPlugin') Plugin-Name
+                        div(class='col-lg-8')
                            div#plugin
                      div#taskConfigParams
                      div#taskConfigParamsAdd
                         include taskParams
-                     div(class='form-group')
-                        div(class='col-lg-10')
-                           input(type='button' class='btn btn-default' value='Save')#saveTaskConfig
-                           input(type='button' class='btn btn-default' value='Cancel')#cancelTaskConfig
-                           input(type='button' class='btn btn-default pull-right' value='Remove')#removeTaskConfig
    script(src="/javascripts/tasks.js")

@@ -20,7 +20,6 @@ describe('TaskExecutor', function(){
 		};
 		var pluginHelper = require(__dirname + '/../src/PluginHelper');
 		pluginHelper.setPath(__dirname + '/../src/plugins/');
-		var plugin433 = require(__dirname + '/../src/plugins/plugin433/plugin433');
 
 		var returnedPlugin = {
 			execute:function(opts) {
@@ -38,6 +37,11 @@ describe('TaskExecutor', function(){
 		assert(stub.calledOnce, "method 'getPlugin' from module 'PluginHelper' wasn't called");
 		assert(spy2.calledOnce, "method 'execute' from plugin 'plugin433' wasn't called");
 		assert(spy2.withArgs({"grpId":1,"deviceId":1,"value":1}).calledOnce, "method 'execute' from plugin 'plugin433' wasn't called with correct arguments");
+
+		pluginHelper.getPlugin.restore();
+	});
+	afterEach(function() {
+		process.removeAllListeners();
 	});
 
 });

@@ -15,11 +15,11 @@ networkCommunicator.startServer();
 //Event when client connected to server - sends configuration to client
 process.on('#clientConnected', function(ip) {
 
-	console.log("sending config to client");
+	// console.log("sending config to client");
 
 	dbHelper.getEventConfig(ip, function(ip, config) {
-		console.log("config");
-		console.log(config);
+		// console.log("config");
+		// console.log(config);
 		var configObject = {
 			"command" : "configEventListeners",
 			"params" : config
@@ -37,7 +37,7 @@ process.on('#uiEventCatched', function(id) {
 //Event when client sends an event to the server
 process.on('#eventCatched', function(catchedEvent) {
 
-	console.log('event catched:' + catchedEvent.listener + ' condition:' + catchedEvent.condition);
+	// console.log('event catched:' + catchedEvent.listener + ' condition:' + catchedEvent.condition);
 
 	checkEventForEventGroupsSuccess(catchedEvent);
 
@@ -46,20 +46,25 @@ process.on('#pluginDataReceived', function(pluginname, data) {
 
 	var plugin = pluginHelper.getPlugin(pluginname);
 	plugin.processPluginData(data, function(nameOfVariable) {
-		console.log('SERVER: update Variable ' + nameOfVariable);
+		// console.log('SERVER: update Variable ' + nameOfVariable);
 		frontend.updateVariable(nameOfVariable);
 	});
 
 });
-// process.on('#changeVariable', function(variableEvent) {
+process.on('#changeVariable', function(variable, value) {
 
-// 	console.log("CHANGE VARIABLE RECEIVED!!!");
+	try {
+		// console.log("CHANGE VARIABLE RECEIVED!!!");
+		// console.log("variable:"+variable+" value:"+value);
+		dbHelper.setVariable(variable, value);
 
-// 	frontend.updateVariable(variableEvent.variable, variableEvent.value);
+		frontend.updateVariable(variable, value);
+	} catch(err) {
+		console.log('SERVER: Error setting variable ('+err+')');
+	}
 
-// 	// dbHelper.setVariable(variableEvent.variable, variableEvent.value);
 
-// });
+});
 
 function checkEventForEventGroupsSuccess(catchedEvent) {
 
@@ -107,7 +112,13 @@ function checkEventForEventGroupsSuccess(catchedEvent) {
 										"params" : taskConfig
 									};
 									if(taskConfig.plugin!=='UI') {
-										networkCommunicator.sendToClient(taskConfig.host,configObject);
+										if(taskConfig.plugin!=='Variable') {
+											networkCommunicator.sendToClient(taskConfig.host,configObject);
+										} else {
+											console.log("SERVER: setting variable!");
+											console.log(taskConfig);
+											process.emit('#changeVariable', taskConfig.params.variablename, taskConfig.params.value);
+										}
 									} else {
 										frontend.executeTask(taskConfig);
 									}
@@ -125,7 +136,6 @@ function checkEventForEventGroupsSuccess(catchedEvent) {
 }
 
 if(typeof exports !== 'undefined') {
-	exports.setEventConfig = setEventConfig;
 }
 
 

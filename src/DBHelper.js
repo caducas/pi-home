@@ -10,276 +10,11 @@ MongoClient.connect('mongodb://127.0.0.1:27017/pihome', function(err, database) 
 });
 var format = require('util').format;
 
-// var exampleEventConfig1 = {
-// 	"listenerName" : "Button01",
-// 	"plugin" : "Gpio",
-// 	"ip" : "127.0.0.1",
-// 	"conditions" : [
-// 		{
-// 			"conditionName" : "Button01Pressed",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : 1
-// 			}
-// 		},
-// 		{
-// 			"conditionName" : "Button01Released",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : 0
-// 			}					
-// 		}
-// 	],
-// 	"params" : {
-// 		"pin" : 18
-// 	}
-// };
-
-// var exampleEventConfig2 = {
-// 	"listenerName" : "UIButton01",
-// 	"plugin" : "UI",
-// 	"ip" : "127.0.0.1",
-// 	"conditions" : [
-// 		{
-// 			"conditionName" : "pressed"
-// 		}
-// 	],
-// 	"params" : {
-// 		"uiName" : "buttonActivatePhysicalLightSwitch"
-// 	}
-// }
-// var exampleEventConfig3 = {
-// 	"listenerName" : "LightSensor",
-// 	"plugin" : "Arduino",
-// 	"ip" : "127.0.0.1",
-// 	"conditions" : [
-// 		{
-// 			"conditionName" : "lightSensor",
-// 			"condition" : {
-// 				"operator" : ">=",
-// 				"value" : 0
-// 			}
-// 		}
-// 	],
-// 	"params" : {
-// 		"pin" : 'A5',
-// 		"interval" : 1000
-// 	}
-// };
-
-// var exampleEventConfig4 = {
-// 	"listenerName" : "RemoteControl",
-// 	"plugin" : "plugin433",
-// 	"ip" : "127.0.0.1",
-// 	"conditions" : [
-// 		{
-// 			"conditionName" : "01_on",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : "1000100000001"
-// 			}
-// 		},
-// 		{
-// 			"conditionName" : "01_off",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : "1000100000011"
-// 			}					
-// 		},
-// 		{
-// 			"conditionName" : "02_on",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : "1000010000001"
-// 			}					
-// 		},
-// 		{
-// 			"conditionName" : "02_off",
-// 			"condition" : {
-// 				"operator" : "=",
-// 				"value" : "1000010000011"
-// 			}					
-// 		}
-// 	],
-// 	"params" : {
-// 		"pin" : 18
-// 	}
-// };
-
-
-// var exampleTask1 = {
-// 	"taskId" : "SwitchOnLED",
-// 	"host" : "127.0.0.1",
-// 	"plugin" : "Gpio",
-// 	"params" : {
-// 		"direction" : 'out',
-// 		"pin" : 27,
-// 		"value" : 0
-// 	}
-// };
-
-// var exampleTask2 = {
-// 	"taskId" : "SwitchOffLED",
-// 	"host" : "127.0.0.1",
-// 	"plugin" : "Gpio",
-// 	"params" : {
-// 		"direction" : 'out',
-// 		"pin" : 27,
-// 		"value" : 1
-// 	}
-// };
-
-// var exampleTask3 = {
-// 	"taskId" : "SwitchOnPower",
-// 	"host" : "127.0.0.1",
-// 	"plugin" : "plugin433",
-// 	"params" : {
-// 		"grpId" : 1,
-// 		"deviceId" : 1,
-// 		"value" : 1
-// 	}
-// };
-// var exampleTask4 = {
-// 	"taskId" : "SwitchOffPower",
-// 	"host" : "127.0.0.1",
-// 	"plugin" : "plugin433",
-// 	"params" : {
-// 		"grpId" : 1,
-// 		"deviceId" : 1,
-// 		"value" : 0
-// 	}
-// };
-
-// var exampleTask5 = {
-// 	"taskId" : "setUIButtonStatusOn",
-// 	"host" : "127.0.0.1",
-// 	"plugin" : "UI",
-// 	"params" : {
-// 		"type" : "text",
-// 		"name" : "Status Licht"
-// 	}
-// };
-
-// var exampleFrontpageItem1 = {
-// 	"name" : "labelLightStatus",
-// 	"type" : "label",
-// 	"description" : "Light status",
-// 	"params" : {
-// 		"value" : 0
-// 	}
-// }
-// var exampleFrontpageItem2 = {
-// 	"name" : "buttonActivatePhysicalLightSwitch",
-// 	"type" : "button",
-// 	"description" : "Activate the physical Button for 5 seconds",
-// 	"params" : {
-// 		"text" : "Activate"
-// 	}
-// }
-
-// var exampleTaskGroup1 = {
-// 	"taskGroupId" : "SwitchAllOn",
-// 	"tasks" : ["SwitchOnLED","SwitchOnPower"]
-// }
-// var exampleTaskGroup2 = {
-// 	"taskGroupId" : "SwitchAllOff",
-// 	"tasks" : ["SwitchOffLED","SwitchOffPower"]
-// }
-
-// var exampleEventGroup1 = {
-// 	"eventGroupId" : "EventLightOn",
-// 	"events" : [
-// 	{
-// 		"listenerName" : "Button01",
-// 		"conditionName" : "Button01Pressed",
-// 		"timeDifference" : "0"
-// 	},
-// 	{
-// 		"listenerName" : "UIButton01",
-// 		"conditionName" : "pressed",
-// 		"timeDifference" : "5000"
-// 	}
-// 	],
-// 	"taskGroups" : ["SwitchAllOn"]
-// }
-
-// var exampleEventGroup2 = {
-// 	"eventGroupId" : "EventLightOff",
-// 	"events" : [
-// 	{
-// 		"listenerName" : "Button01",
-// 		"conditionName" : "Button01Released",
-// 		"timeDifference" : "0"
-// 	},
-// 	{
-// 		"listenerName" : "UIButton01",
-// 		"conditionName" : "pressed",
-// 		"timeDifference" : "5000"
-// 	}
-// 	],
-// 	"taskGroups" : ["SwitchAllOff"]
-// }
-
-// var exampleEventGroup3 = {
-// 	"eventGroupId" : "EventLightOn",
-// 	"events" : 
-// 	[
-// 	{
-// 		"listenerName" : "UIButton01",
-// 		"conditionName" : "pressed",
-// 		"timeDifference" : "0"
-// 	}
-// 	],
-// 	"taskGroups" : ["SwitchAllOn"]
-// }
-
 process.on( 'SIGINT', function() {
   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
   db.close();
   process.exit( );
 })
-
-// executeDbCommand(function() {
-
-	// setEventConfig("127.0.0.1", realTestConfig);
-
-	// addTaskConfig(exampleTask1);
-	// addTaskConfig(exampleTask2);
-	// addTaskConfig(exampleTask3);
-	// addTaskConfig(exampleTask4);
-	// addTaskConfig(exampleTask5, function() {
-
-	// });
-
-	// addTaskGroupConfig(exampleTaskGroup1);
-	// addTaskGroupConfig(exampleTaskGroup2);
-
-	// getTaskGroupConfig("SwitchAllOn", function(config) {
-	// 	config.eventGroups = ["EventButtonOn"];
-	// 	updateTaskGroupConfig(config);
-	// });
-
-	// getTaskGroupConfig("SwitchAllOff", function(config) {
-	// 	config.eventGroups = ["EventButtonOff"];
-	// 	updateTaskGroupConfig(config);
-	// });
-
-	// addEventGroupConfig(exampleEventGroup1, function() {});
-	// addEventGroupConfig(exampleEventGroup2, function() {});
-	// addEventGroupConfig(exampleEventGroup3);
-
-	// addEventConfig(exampleEventConfig1, function() {});
-	// addEventConfig(exampleEventConfig2, function() {});
-	// addEventConfig(exampleEventConfig3, function() {});
-	// addEventConfig(exampleEventConfig4, function() {});
-
-	// addFrontpageItem(exampleFrontpageItem1, function() {});
-	// addFrontpageItem(exampleFrontpageItem2, function() {});
-
-// });
-
-
-
 
 
 //--------------------------FRONTPAGE---------------------------------------------------
@@ -499,8 +234,22 @@ function getContainerByName(name, callback) {
 
 function removeContainer(containerId, callback) {
 	var id = new ObjectID(containerId);
-	db.collection('containers').remove({_id:id}, function(err, numberOfRemovedDocs) {
-		callback();
+
+	db.collection('containers').find({_id:configId}).toArray(function(err, docs) {		
+		db.collection('sites').find({containers:{$elemMatch:{name:docs[0].name}}}).toArray(function(err, arr) {
+			for(var i in arr) {
+				var containers = arr[i].containers;
+				for(var j in containers) {
+					if(containers[j].name === docs[0].name) {
+						containers.splice(j,1);
+					}
+				}
+				db.collection('sites').save(arr[i], function(err, objects) {});
+			}
+			db.collection('containers').remove({_id:id}, function(err, numberOfRemovedDocs) {
+				callback();
+			});
+		});
 	});
 }
 
@@ -509,9 +258,18 @@ function removeContainer(containerId, callback) {
 //--------------------------------------------------------------------------------------
 
 function getUIEventNames(callback) {
+	var arr = [];
 	db.collection('frontend').find({type:"button"},{name:1,_id:0}).sort({name:1}).toArray(function(err, docs) {
-		callback(docs);
+		arr = docs;
+		db.collection('frontend').find({type:"onOffSwitch"},{name:1,_id:0}).sort({name:1}).toArray(function(err, docs) {
+			for(var i in docs) {
+				arr.push({name : (docs[i].name + '_on')});
+				arr.push({name : (docs[i].name + '_off')});
+			}
+			callback(arr);
+		});
 	});
+	
 }
 
 function getUIEvent(name, callback) {
@@ -543,7 +301,7 @@ function getEventConfig(ip, callback) {
 }
 function getEventListenerNames(callback) {
 	executeDbCommand(function() {
-		db.collection('events').find({}).toArray(function(err, docs) {
+		db.collection('events').find({}).sort({listenerName:1}).toArray(function(err, docs) {
 			var arr = [];
 			for(var i in docs) {
 				arr.push(docs[i].listenerName);
@@ -927,13 +685,17 @@ function setVariable(variableName, variableValue, callback) {
 		if(docs.length === 0) {
 			db.collection('variables').insert({"name":variableName, "value": variableValue}, function(err, objects) {
 				console.log("inserting");
-				callback();
+				if(callback !== undefined) {
+					callback();	
+				}
 			});
 		} else {
 
 			db.collection('variables').update({"name":variableName}, {$set:{"value":variableValue}}, function(err) {
 				console.log("updated existing entry");
-				callback();				
+				if(callback !== undefined) {
+					callback();	
+				}			
 			});
 		}
 	});
@@ -941,8 +703,13 @@ function setVariable(variableName, variableValue, callback) {
 
 function getVariable(variableName, callback) {
 
+	console.log('DBHELPER: get variable '+variableName);
 	db.collection('variables').find({"name":variableName}).toArray(function(err, docs) {
-		callback(docs[0]);
+		console.log('DBHELPER: callback executed, result'+docs);
+		if(docs.length===1) {
+			console.log('DBHELPER: docs length = 1 and content:'+docs[0]);
+			callback(docs[0]);
+		}
 	});
 }
 

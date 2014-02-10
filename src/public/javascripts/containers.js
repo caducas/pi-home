@@ -3,7 +3,7 @@ var activeContainer;
 
 function create() {
 	activeContainer = {
-		"name" : "",
+		"name" : "Container-Name",
 		"description" : "",
 		"width" : "12",
 		"elements" : []
@@ -21,6 +21,7 @@ function refresh() {
 	refreshElementsList();
 
 	$("#containerConfig").show();
+   	$('#new').hide();
 }
 
 function save() {
@@ -29,42 +30,75 @@ function save() {
 	activeContainer.width = document.getElementById("txtWidth").value;
 
 	socket.emit('updateContainer',activeContainer);
+   	$('#new').show();
 }
 
 function configure(id) {
 
 	socket.emit('getContainer',id);
+   	$('#new').hide();
 }
 
 function cancel() {
 	activeContainer = null;
 	$("#containerConfig").hide();
+   	$('#new').show();
 }
 
 function remove() {
 	socket.emit('removeContainer', activeContainer._id);
 	$("#containerConfig").hide();
+   	$('#new').show();
 }
 
 function refreshElementsList() {
 
-    var elementsListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Position</th><th>Element Name</th><th>Remove</th></tr></thead><tbody>';
+    var elementsListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Position</th><th>Element Name</th><th colspan="3"></th></tr></thead><tbody>';
     for(var i in activeContainer.elements) {
     	elementsListHtml += '<tr>';
     	elementsListHtml += '<td>'+activeContainer.elements[i].pos+'</td>';
     	elementsListHtml += '<td>'+activeContainer.elements[i].name+'</td>';
-    	elementsListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeElementFromContainer(' + i + ')" />';
+    	elementsListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeElementFromContainer(' + i + ')" /></td>';
+    	elementsListHtml += '<td>';
     	if(activeContainer.elements[i].pos>1) {
-	    	elementsListHtml += '<input type="button" class="btn btn-default" value="Up" onclick="moveContainerUp(' + i + ')" />';
+	    	// elementsListHtml += '<button type="button" class="btn btn-default button-config-list" onclick="moveContainerUp(' + i + ')">';
+	    	// elementsListHtml += '<span class="glyphicon glyphicon-arrow-down"></span>';
+	    	// elementsListHtml += '</button>';
+	    	elementsListHtml += '<input type="button" class="btn btn-default button-config-list" value="Up" onclick="moveElementUp(' + i + ')" />';
 	    }
+    	elementsListHtml += '</td><td>';
     	if(activeContainer.elements[i].pos<activeContainer.elements.length) {
-	    	elementsListHtml += '<input type="button" class="btn btn-default" value="Down" onclick="moveContainerDown(' + i + ')" />';
+	    	elementsListHtml += '<input type="button" class="btn btn-default button-config-list" value="Down" onclick="moveElementDown(' + i + ')" />';
 	    }
     	elementsListHtml += '</td>';
     	elementsListHtml += '</tr>';
     }
+    elementsListHtml += '<tr><td></td><td><div id="divSelectElementName">'+$("#divSelectElementName").html()+'</div></td>';
+    elementsListHtml += '<td colspan="3"><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addElement()" /></td></tr>'
     elementsListHtml += '</tbody></table>';
 	$("#elementsList").html(elementsListHtml);
+}
+
+function moveElementUp(id) {
+	activeContainer.elements[id-1].pos = activeContainer.elements[id].pos;
+	activeContainer.elements[id].pos = activeContainer.elements[id].pos-1;
+
+	var elementCache = activeContainer.elements[id-1];
+
+	activeContainer.elements[id-1] = activeContainer.elements[id];
+	activeContainer.elements[id] = elementCache;
+	refreshElementsList();
+}
+
+function moveElementDown(id) {
+	activeContainer.elements[id+1].pos = activeContainer.elements[id].pos;
+	activeContainer.elements[id].pos = activeContainer.elements[id].pos+1;
+
+	var elementCache = activeContainer.elements[id+1];
+
+	activeContainer.elements[id+1] = activeContainer.elements[id];
+	activeContainer.elements[id] = elementCache;
+	refreshElementsList();
 }
 
 

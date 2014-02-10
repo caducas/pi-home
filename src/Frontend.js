@@ -59,7 +59,7 @@ app.get('/', function(req, res){
 			updateVariable(name);
 		})
 
-		process.on('#changeVariable', function(variable, value) {
+		process.on('#changeFrontendVariable', function(variable, value) {
 			socket.emit('updateVariable', {"name":variable, "value":value});
 		});
 
@@ -107,7 +107,7 @@ app.get('/site', function(req, res) {
 					socket.emit('getContainer', container);
 					for(var j in container.elements) {
 						dbHelper.getFrontpageItemByName(container.elements[j].name, function(element) {
-							console.log("FRONTEND:element" + element);
+							// console.log("FRONTEND:element" + element);
 							socket.emit('getElement', element);
 						});
 					}
@@ -121,7 +121,7 @@ app.get('/site', function(req, res) {
 		});
 
 
-		process.on('#changeVariable', function(variable, value) {
+		process.on('#changeFrontendVariable', function(variable, value) {
 			console.log("FRONTEND: should update Variable now");
 			socket.emit('updateVariable', {"name":variable, "value":value});
 		});
@@ -133,11 +133,11 @@ app.get('/site', function(req, res) {
 		});
 		
 		socket.on('getFrontpageItem', function(item) {
-			console.log("FRONTEND: received request for frontpageItem");
+			// console.log("FRONTEND: received request for frontpageItem");
 			try{
 				var plugin = pluginHelper.getPlugin(item.type);
 				plugin.getFrontpageItem(item, function(frontpageItem) {
-					console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
+					// console.log("FRONTEND: frontpageItem by using plugin created: " + frontpageItem);
 					socket.emit('getFrontpageItem', item, frontpageItem);
 				});
 			} catch(err) {
@@ -479,9 +479,7 @@ server.listen(app.get('port'), function(){
 
 function updateVariable(variableName) {
 	dbHelper.getVariable(variableName, function(res) {
-		console.log("res.value");
-		console.log(res.value);
-		process.emit('#changeVariable', variableName, res.value);
+		process.emit('#changeFrontendVariable', variableName, res.value);
 	})
 }
 

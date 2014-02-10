@@ -8,7 +8,7 @@ function configureFrontendItem(id) {
 
 function createNewFrontpageItem() {
 	activeFrontpageConfig = {
-		"name" : "",
+		"name" : "Frontpageitem-Name",
 		"type" : "label",
 		"description" : "",
 		"params" : {
@@ -35,13 +35,13 @@ function showFrontpageItemParams() {
 	var paramsConfigHtml = "";
 	for(var i in activeFrontpageConfig.params) {
 		if(i === 'variable') {
-			paramsConfigHtml += "<div class='form-group'><label class='col-lg-2 control-label' for='setting_"+i+"'>"+i+"</label>";
-			paramsConfigHtml += "<div class='col-lg-10' id='variableList'>";
+			paramsConfigHtml += "<div class='form-group'><label class='col-lg-3 control-label' for='setting_"+i+"'>"+i+"</label>";
+			paramsConfigHtml += "<div class='col-lg-8' id='variableList'>";
 			paramsConfigHtml += "</div></div>";
 			socket.emit('getListOfVariables');
 		} else {
-			paramsConfigHtml += "<div class='form-group'><label class='col-lg-2 control-label' for='setting_"+i+"'>"+i+"</label>";
-			paramsConfigHtml += "<div class='col-lg-10'><input type='text' id='setting_"+i+"' value='"+activeFrontpageConfig.params[i]+"' class='form-control' />";
+			paramsConfigHtml += "<div class='form-group'><label class='col-lg-3 control-label' for='setting_"+i+"'>"+i+"</label>";
+			paramsConfigHtml += "<div class='col-lg-8'><input type='text' id='setting_"+i+"' value='"+activeFrontpageConfig.params[i]+"' class='form-control' />";
 			paramsConfigHtml += "</div></div>";
 		}
 	}
@@ -58,13 +58,23 @@ function typeChanged() {
 		};
 		activeFrontpageConfig.params = params;
 	}
+	if(activeFrontpageConfig.type==='onOffSwitch') {
+		var params = {
+			onText : "",
+			offText : "",
+			variable : "",
+			onValue : "",
+			offValue : ""
+		};
+		activeFrontpageConfig.params = params;
+	}	
 	if(activeFrontpageConfig.type==='label') {
 		var params = {
 			variable : ""
 		}
 		activeFrontpageConfig.params = params;
 	}
-	if(activeFrontpageConfig.type!=='button' && activeFrontpageConfig.type !== 'label') {
+	if(activeFrontpageConfig.type!=='button' && activeFrontpageConfig.type !== 'label' && activeFrontpageConfig.type !== 'onOffSwitch') {
 		getEmptyConfigParams();
 		//pluginManager getConfig
 	} else {
@@ -96,6 +106,8 @@ function saveFrontpageItemConfig() {
 
 function removeFrontpageItem() {
 	socket.emit('removeFrontpageItem', activeFrontpageConfig._id);
+
+	$("#newFrontpageItem").show();
 }
 
 socket.on('getFrontpageItemList', function(data) {

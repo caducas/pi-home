@@ -8,9 +8,10 @@ function configureEvent(eventId) {
 
 function createNewEvent() {
 	activeEventConfig = {
-		"listenerName" : "",
+		"listenerName" : "Event-Name",
 		"plugin" : "UI",
 		"ip" : "127.0.0.1",
+		"variable" : "",
 		"conditions" : [
 		],
 		"params" : {
@@ -113,13 +114,13 @@ function refreshPluginParams() {
 function refreshConditionList() {
 
 	if(activeEventConfig.plugin !== "UI") {
-	    var conditionListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Condition name</th><th>Operator</th><th>value</th><th>Remove</th></tr></thead><tbody>';
+	    var conditionListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Condition name</th><th>Operator</th><th>value</th><th>&nbsp;</th></tr></thead><tbody>';
 	    for(var i in activeEventConfig.conditions) {
 	    	conditionListHtml += '<tr>';
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.operator+'</td>';
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].condition.value+'</td>';
-	    	conditionListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
+	    	conditionListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeConditionFromEventListener(' + i + ')" /></td>';
 	    	conditionListHtml += '</tr>';
 	    }
 	    conditionListHtml += '<tr>';
@@ -133,7 +134,7 @@ function refreshConditionList() {
 	    conditionListHtml += '<option><=</option>';
 	    conditionListHtml += '</select></td>';
 	    conditionListHtml += '<td><input type="text" id="inputConditionValue" value="" class="form-control" /></td>';
-	    conditionListHtml += '<td><input type="button" class="btn btn-default" value="Add" onclick="addCondition()" /></td>';
+	    conditionListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addCondition()" /></td>';
 	    conditionListHtml += '</tr>';
 	    conditionListHtml += '</tbody></table>';
 		$("#conditionList").html(conditionListHtml);
@@ -146,7 +147,7 @@ function refreshConditionList() {
 
 	    	activeEventConfig.conditions.push(newCondition);
 	    }
-	    var conditionListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Condition name</th></tr></thead><tbody>';
+	    var conditionListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Condition name</th></tr></thead><tbody>';
 	    for(var i in activeEventConfig.conditions) {
 	    	conditionListHtml += '<tr>';
 	    	conditionListHtml += '<td>'+activeEventConfig.conditions[i].conditionName+'</td>';
@@ -178,8 +179,10 @@ function refreshEventConfig() {
 	document.getElementById("txtListenerName").value = activeEventConfig.listenerName;
 	document.getElementById("txtListenerIp").value = activeEventConfig.ip;
 	document.getElementById("txtListenerPlugin").value = activeEventConfig.plugin;
+	document.getElementById("txtListenerVariable").value = activeEventConfig.variable;
 
 	$("#eventGroupConfig").show();
+	$("#addNewEvent").hide();
 
 	refreshConditionList();
 
@@ -194,7 +197,6 @@ function refreshEventConfig() {
 	}
 
 	$("#params_"+activeEventConfig.plugin).show();
-	$("#addNewEvent").hide();
 }
 
 function removeEventConfig() {

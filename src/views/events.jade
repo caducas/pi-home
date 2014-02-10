@@ -3,7 +3,8 @@ html
    head
       title= Tasks
       meta(name='mobile-web-app-capable' content='yes')
-      link(rel='stylesheet', href='/css/bootstrap.css')
+      link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
+      link(rel='stylesheet', href='/css/pihome.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
    body
@@ -16,11 +17,12 @@ html
             div(class='well')
                form(class='bs-example form-horizontal')
                   fieldset  
-                     legend Configuration
-                     div(class='form-group')
-                        label(class='col-lg-3 control-label' for='txtListenerName') Name
-                        div(class='col-lg-8')
-                           input(type='text' id='txtListenerName' value='' class='form-control')
+                     legend
+                        input(type='text' value='Event-Name' class='form-control config-title-input')#txtListenerName
+                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelEventListenerConfig
+                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveEventListenerConfig
+                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeEventListenerConfig
+                        &nbsp;
                      div(class='form-group')
                         label(class='col-lg-3 control-label' for='txtListenerIp') IP
                         div(class='col-lg-8')
@@ -34,13 +36,8 @@ html
                         div(class='col-lg-8')
                            div#plugin
                      legend Conditions
-                     div#conditionList
+                     div(class='config-content')#conditionList
                      legend Plugin-Params
                      div#pluginParams
                         include eventListener
-                     div(class='form-group')
-                        div(class='col-lg-10')
-                           input(type='button' class='btn btn-default' value='Cancel')#cancelEventListenerConfig
-                           input(type='button' class='btn btn-default' value='Save')#saveEventListenerConfig
-                           input(type='button' class='btn btn-default pull-right' value='Remove')#removeEventListenerConfig
    script(src="/javascripts/events.js")

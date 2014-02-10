@@ -41,10 +41,10 @@ function showEventGroupConfig() {
 	document.getElementById("txtEventGroupId").value = activeEventGroupConfig.eventGroupId;
 
 	refreshEventList();
-	socket.emit('getListenerNames');
+	// socket.emit('getListenerNames');
 
 	refreshTaskGroupList();
-	socket.emit('getTaskGroupNames');
+	// socket.emit('getTaskGroupNames');
 
 	$("#eventGroupConfig").show();
 	$("#newEventGroup").hide();
@@ -64,30 +64,40 @@ function removeTaskGroupFromEventGroup(pos) {
 
 function refreshEventList() {
 
-    var eventListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>Listener name</th><th>Condition name</th><th>max. time delay (ms)</th><th>Remove</th></tr></thead><tbody>';
+    var eventListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Listener name</th><th>Condition name</th><th>Delay (ms)</th><th></th></tr></thead><tbody>';
     for(var i in activeEventGroupConfig.events) {
     	eventListHtml += '<tr>';
-    	eventListHtml += '<td>'+activeEventGroupConfig.events[i].listenerName+'</td>';
-    	eventListHtml += '<td>'+activeEventGroupConfig.events[i].conditionName+'</td>';
-    	eventListHtml += '<td>'+activeEventGroupConfig.events[i].timeDifference+'</td>';
-    	eventListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeEventFromEventGroup(' + i + ')" /></td>';
+    	eventListHtml += '<td class="config-table-list-content">'+activeEventGroupConfig.events[i].listenerName+'</td>';
+    	eventListHtml += '<td class="config-table-list-content">'+activeEventGroupConfig.events[i].conditionName+'</td>';
+    	eventListHtml += '<td class="config-table-list-content">'+activeEventGroupConfig.events[i].timeDifference+'</td>';
+    	eventListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeEventFromEventGroup(' + i + ')" /></td>';
     	eventListHtml += '</tr>';
     }
+    eventListHtml += '<tr><td><div id="divSelectListenerName"></div></td>';
+    eventListHtml += '<td><div id="divSelectConditionName"></div></td>';
+    eventListHtml += '<td><input type="text" id="inputTimeDifference" value="0" class="form-control" /></td>';
+    eventListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addEvent()" /></td></tr>'
     eventListHtml += '</tbody></table>';
 	$("#eventList").html(eventListHtml);
+
+	socket.emit('getListenerNames');
 }
 
 function refreshTaskGroupList() {
 
-    var taskGroupListHtml = '<table class="table table-striped table-bordered table-hover"><thead><tr><th>TaskGroup Id</th><th>Remove</th></tr></thead><tbody>';
+    var taskGroupListHtml = '<table class="table table-striped table-hover"><thead><tr><th>TaskGroup Id</th><th></th></tr></thead><tbody>';
     for(var i in activeEventGroupConfig.taskGroups) {
     	taskGroupListHtml += '<tr>';
-    	taskGroupListHtml += '<td>'+activeEventGroupConfig.taskGroups[i]+'</td>';
-    	taskGroupListHtml += '<td><input type="button" class="btn btn-default" value="Remove" onclick="removeTaskGroupFromEventGroup(' + i + ')" /></td>';
+    	taskGroupListHtml += '<td class="config-table-list-content">'+activeEventGroupConfig.taskGroups[i]+'</td>';
+    	taskGroupListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeTaskGroupFromEventGroup(' + i + ')" /></td>';
     	taskGroupListHtml += '</tr>';
     }
+    taskGroupListHtml += '<tr><td><div id="divSelectTaskGroupName"></div></td>';
+    taskGroupListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addTaskGroup()" /></td></tr>'
     taskGroupListHtml += '</tbody></table>';
 	$("#taskGroupList").html(taskGroupListHtml);
+	
+	socket.emit('getTaskGroupNames');
 }
 
 function selectListenerNameChanged() {
@@ -109,6 +119,7 @@ function addEvent() {
 	activeEventGroupConfig.events.push(newEvent);
 
 	refreshEventList();
+	showEventGroupConfig();
 }
 
 function addTaskGroup() {

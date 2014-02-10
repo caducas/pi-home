@@ -2,14 +2,38 @@ doctype html
 html
    head
       title= title
-      link(rel='stylesheet', href='/css/bootstrap.css')
+      link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css')
       link(rel='stylesheet', href='/css/pihome.css')
       script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
       script(src="/socket.io/socket.io.js")
-      script(src='/javascripts/home.js')
       meta(name='viewport',content='width=device-width,initial-scale=1.0')
    body
       include navigation
-      div.container
-         div(class='col-lg-10')
-            div#tasks
+      div(class='container')
+         h1 Pi@Home
+         p(class='lead')
+            Cheap home automation using Raspberry Pi
+         p(class='lead') Framework for Pi@Home System
+            br
+            a(href='https://github.com/caducas/pi-home' class='btn btn-outline-inverse btn-lg') Pi@Home
+         p(class='lead') Plugin to use GPIOs on Raspberry Pies
+            br
+            a(href='https://github.com/caducas/Gpio' class='btn btn-outline-inverse btn-lg') Plugin "Gpio"
+         p(class='lead') Plugin to use 433 MHz Receiver and Sender
+            br
+            a(href='https://github.com/caducas/plugin433' class='btn btn-outline-inverse btn-lg') Plugin "plugin433"
+         p(class='lead') Plugin to get values from analoge sensors using an Arduino
+            br
+            a(href='https://github.com/caducas/Arduino' class='btn btn-outline-inverse btn-lg') Plugin "Arduino"
+         p(class='lead') Plugin to get the serial output from an Arduino
+            br
+            a(href='https://github.com/caducas/Arduino_serial_output' class='btn btn-outline-inverse btn-lg') Plugin "Arduino_serial_output"
+         p(class='lead') Plugin to use a DS18B20 Temperature Sensor in Pi@Home system
+            br
+            a(href='https://github.com/caducas/Temperatursensor' class='btn btn-outline-inverse btn-lg') Plugin "Temperatursensor"
+         p(class='lead') Plugin to show picture from IP Camera
+            br
+            a(href='https://github.com/caducas/IPCam' class='btn btn-outline-inverse btn-lg') Plugin "IPcam"
+         p(class='lead') Plugin to use a Weather Station in Pi@Home system
+            br
+            a(href='https://github.com/caducas/Wfrog' class='btn btn-outline-inverse btn-lg') Plugin "Wfrog"

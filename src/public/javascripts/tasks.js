@@ -7,7 +7,7 @@ function configureTask(taskId) {
 
 function createNewTask() {
 	activeTaskConfig = {
-		"taskId" : "",
+		"taskId" : "Task-Name",
 		"host" : "127.0.0.1",
 		"plugin" : "",
 		"params" : {

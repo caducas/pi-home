@@ -38,7 +38,7 @@ describe('Server', function(){
 		stub2 = sinon.stub(networkCommunicator, "sendToClient");
 
 		var clientTestConfig = {
-			"command" : "config",
+			"command" : "configEventListeners",
 			"params" : [{
 				"plugin":"test"
 			}]
