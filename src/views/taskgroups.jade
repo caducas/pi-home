@@ -18,9 +18,12 @@ html
                   fieldset  
                      legend
                         input(type='text' value='Taskgroup-Name' class='form-control config-title-input')#txtTaskGroupId
-                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeTaskGroup
-                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveTaskGroupConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelTaskGroupConfig
+                        button(type='button' class='btn btn-default pull-right config-button')#saveTaskGroupConfig
+                           span(class="glyphicon glyphicon-floppy-disk")
+                        button(type='button' class='btn btn-default pull-right config-button')#removeTaskGroup
+                           span(class="glyphicon glyphicon-trash")
+                        button(type='button' class='btn btn-default pull-right config-button')#cancelTaskGroupConfig
+                           span(class="glyphicon glyphicon-arrow-left")
                         &nbsp;
                      div(class='config-content')#taskList
 

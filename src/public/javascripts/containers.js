@@ -21,7 +21,7 @@ function refresh() {
 	refreshElementsList();
 
 	$("#containerConfig").show();
-   	$('#new').hide();
+	$('#new').hide();
 }
 
 function save() {
@@ -30,52 +30,52 @@ function save() {
 	activeContainer.width = document.getElementById("txtWidth").value;
 
 	socket.emit('updateContainer',activeContainer);
-   	$('#new').show();
+	$('#new').show();
 }
 
 function configure(id) {
 
 	socket.emit('getContainer',id);
-   	$('#new').hide();
+	$('#new').hide();
 }
 
 function cancel() {
 	activeContainer = null;
 	$("#containerConfig").hide();
-   	$('#new').show();
+	$('#new').show();
 }
 
 function remove() {
 	socket.emit('removeContainer', activeContainer._id);
 	$("#containerConfig").hide();
-   	$('#new').show();
+	$('#new').show();
 }
 
 function refreshElementsList() {
 
-    var elementsListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Position</th><th>Element Name</th><th colspan="3"></th></tr></thead><tbody>';
-    for(var i in activeContainer.elements) {
-    	elementsListHtml += '<tr>';
-    	elementsListHtml += '<td>'+activeContainer.elements[i].pos+'</td>';
-    	elementsListHtml += '<td>'+activeContainer.elements[i].name+'</td>';
-    	elementsListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeElementFromContainer(' + i + ')" /></td>';
-    	elementsListHtml += '<td>';
-    	if(activeContainer.elements[i].pos>1) {
-	    	// elementsListHtml += '<button type="button" class="btn btn-default button-config-list" onclick="moveContainerUp(' + i + ')">';
-	    	// elementsListHtml += '<span class="glyphicon glyphicon-arrow-down"></span>';
-	    	// elementsListHtml += '</button>';
-	    	elementsListHtml += '<input type="button" class="btn btn-default button-config-list" value="Up" onclick="moveElementUp(' + i + ')" />';
-	    }
-    	elementsListHtml += '</td><td>';
-    	if(activeContainer.elements[i].pos<activeContainer.elements.length) {
-	    	elementsListHtml += '<input type="button" class="btn btn-default button-config-list" value="Down" onclick="moveElementDown(' + i + ')" />';
-	    }
-    	elementsListHtml += '</td>';
-    	elementsListHtml += '</tr>';
-    }
-    elementsListHtml += '<tr><td></td><td><div id="divSelectElementName">'+$("#divSelectElementName").html()+'</div></td>';
-    elementsListHtml += '<td colspan="3"><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addElement()" /></td></tr>'
-    elementsListHtml += '</tbody></table>';
+	var elementsListHtml = '<table class="table table-striped table-hover"><thead><tr><th>Position</th><th>Element Name</th><th colspan="3"></th></tr></thead><tbody>';
+	for(var i in activeContainer.elements) {
+		elementsListHtml += '<tr>';
+		elementsListHtml += '<td>'+activeContainer.elements[i].pos+'</td>';
+		elementsListHtml += '<td>'+activeContainer.elements[i].name+'</td>';
+		elementsListHtml += '<td>';
+		if(activeContainer.elements[i].pos>1) {
+			// elementsListHtml += '<button type="button" class="btn btn-default button-config-list" onclick="moveContainerUp(' + i + ')">';
+			// elementsListHtml += '<span class="glyphicon glyphicon-arrow-down"></span>';
+			// elementsListHtml += '</button>';
+			elementsListHtml += '<button type="button" class="btn btn-default button-config-list" onclick="moveElementUp(' + i + ')"><span class="glyphicon glyphicon-arrow-up"></span></button>';
+		}
+		elementsListHtml += '</td><td>';
+		if(activeContainer.elements[i].pos<activeContainer.elements.length) {
+			elementsListHtml += '<button type="button" class="btn btn-default button-config-list" onclick="moveElementDown(' + i + ')"><span class="glyphicon glyphicon-arrow-down"></span></button>';
+		}
+		elementsListHtml += '</td>';
+		elementsListHtml += '<td><button type="button" class="btn btn-default button-config-list" onclick="removeElementFromContainer(' + i + ')"><span class="glyphicon glyphicon-trash"></span></button></td>';
+		elementsListHtml += '</tr>';
+	}
+	elementsListHtml += '<tr><td></td><td><div id="divSelectElementName">'+$("#divSelectElementName").html()+'</div></td>';
+	elementsListHtml += '<td colspan="3"><button type="button" class="btn btn-default button-config-list" onclick="addElement()"><span class="glyphicon glyphicon-plus"></span></button></td></tr>';
+	elementsListHtml += '</tbody></table>';
 	$("#elementsList").html(elementsListHtml);
 }
 
@@ -153,6 +153,6 @@ $(document).ready(function(){
 	$("#save").click(function() {save();});
 	$("#cancel").click(function() {cancel();});
 	$("#remove").click(function() {remove();});
-   	$('#new').click(function() {create();});
+	$('#new').click(function() {create();});
 	$("#containerConfig").hide();
 });

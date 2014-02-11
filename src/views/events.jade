@@ -19,9 +19,12 @@ html
                   fieldset  
                      legend
                         input(type='text' value='Event-Name' class='form-control config-title-input')#txtListenerName
-                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelEventListenerConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveEventListenerConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeEventListenerConfig
+                        button(type='button' class='btn btn-default pull-right config-button')#saveEventListenerConfig
+                           span(class="glyphicon glyphicon-floppy-disk")
+                        button(type='button' class='btn btn-default pull-right config-button')#removeEventListenerConfig
+                           span(class="glyphicon glyphicon-trash")
+                        button(type='button' class='btn btn-default pull-right config-button')#cancelEventListenerConfig
+                           span(class="glyphicon glyphicon-arrow-left")
                         &nbsp;
                      div(class='form-group')
                         label(class='col-lg-3 control-label' for='txtListenerIp') IP

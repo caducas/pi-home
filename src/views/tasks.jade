@@ -19,9 +19,12 @@ html
                   fieldset
                      legend
                         input(type='text' value='Task-Name' class='form-control config-title-input')#txtTaskId
-                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveTaskConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelTaskConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeTaskConfig
+                        button(type='button' class='btn btn-default pull-right config-button')#saveTaskConfig
+                           span(class="glyphicon glyphicon-floppy-disk")
+                        button(type='button' class='btn btn-default pull-right config-button')#removeTaskConfig
+                           span(class="glyphicon glyphicon-trash")
+                        button(type='button' class='btn btn-default pull-right config-button')#cancelTaskConfig
+                           span(class="glyphicon glyphicon-arrow-left")
                         &nbsp;
                      div(class='form-group')
                         label(class='col-lg-3 control-label' for='txtHost') Host-IP

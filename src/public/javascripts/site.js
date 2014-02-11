@@ -47,7 +47,7 @@ function refreshSite() {
 			var element = site.containers[i].container.elements[j].element;
 			if(element === undefined) {
 				continue;
-			};
+			}
 
 			if(element.type === 'button') {
 				containersHtml += '<input type="button" value="'+element.params.text+'" onclick="uiEvent(\''+element.name+'\')" class="btn btn-success pull-right" />';
@@ -100,7 +100,7 @@ function refreshSite() {
 					}
 				} catch(err) {
 				}
-				containersHtml += "</div>"
+				containersHtml += "</div>";
 			}
 
 			if(element.type !== 'button' && element.type !== 'label') {
@@ -114,7 +114,7 @@ function refreshSite() {
 					}		
 				}
 			}
-			containersHtml += "<br />"
+			containersHtml += "<br />";
 
 		}
 

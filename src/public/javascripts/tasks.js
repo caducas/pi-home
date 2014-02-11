@@ -43,8 +43,8 @@ function pluginChanged() {
 
 	var result = [];
 	var checkString = "setting_"+activeTaskConfig.plugin;
-	for(var i in elements) {
-		var element = elements[i];
+	for(var j in elements) {
+		var element = elements[j];
 		for(var i in element) {
 			var elementsId = element[i].id;
 			if(elementsId !== undefined && elementsId.slice(0,checkString.length)===checkString) {
@@ -60,7 +60,7 @@ function pluginChanged() {
 function refreshPluginParams() {
 
 	$('div[id^=params_]').filter(function() {
-		return /^params_/.test(this.id);
+		return (/^params_/).test(this.id);
 	}).each(function() {
 		$("#"+this.id).hide();
 	});
@@ -78,7 +78,7 @@ function saveTaskConfig() {
 
 	for (var i in activeTaskConfig.params) {
 		activeTaskConfig.params[i] = document.getElementById("setting_"+activeTaskConfig.plugin+"_"+i).value;
-	};
+	}
 	socket.emit('updateTaskConfig',activeTaskConfig);
 	$("#taskConfig").hide();
 	$("#addNewTask").show();
@@ -92,16 +92,16 @@ function cancelTaskConfig() {
 
 function refreshPluginList(pluginList) {
 
-    var pluginListHtml = '<select class="form-control" id="pluginList" onchange="pluginChanged()">';
-    for(var i in pluginList) {
-    	pluginListHtml += '<option>'+pluginList[i]+'</option>';
+	var pluginListHtml = '<select class="form-control" id="pluginList" onchange="pluginChanged()">';
+	for(var i in pluginList) {
+		pluginListHtml += '<option>'+pluginList[i]+'</option>';
     }
     pluginListHtml += '</select>';
 	$("#plugin").html(pluginListHtml);
 }
 
 socket.on('message', function(data) {
-   addMessage(data['message'], data['pseudo']);
+   addMessage(data.message, data.pseudo);
 });
 
 socket.on('getAvailablePlugins', function(listOfPlugins) {
@@ -130,10 +130,10 @@ socket.on('removedTask', function() {
 });
 
 $(document).ready(function(){
-   $("#saveTaskConfig").click(function() {saveTaskConfig();});
-   $("#cancelTaskConfig").click(function() {cancelTaskConfig();});
-   $('#addNewTask').click(function() {createNewTask();});
-   	$('#removeTaskConfig').click(function() {removeTask();});
+	$("#saveTaskConfig").click(function() {saveTaskConfig();});
+	$("#cancelTaskConfig").click(function() {cancelTaskConfig();});
+	$('#addNewTask').click(function() {createNewTask();});
+	$('#removeTaskConfig').click(function() {removeTask();});
 	$("#taskConfig").hide();
    // $("#saveTaskConfig").hide();
 });

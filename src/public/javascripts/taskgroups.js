@@ -33,16 +33,15 @@ function removeTaskFromTaskGroup(pos) {
 
 function refreshTaskList() {
 
-
-    var taskListHtml = '<table class="table table-striped table-hover"><thead><tr><th colspan="2">Tasks</th></tr></thead><tbody>';
-    for(var i in activeTaskGroupConfig.tasks) {
-    	taskListHtml += '<tr>';
-    	taskListHtml += '<td class="config-table-list-content">'+activeTaskGroupConfig.tasks[i]+'</td>';
-    	taskListHtml += '<td><input type="button" class="btn btn-default button-config-list" value="Remove" onclick="removeTaskFromTaskGroup(' + i + ')" /></td>';
-    	taskListHtml += '</tr>';
-    }
-    taskListHtml += '<tr><td><div id="divSelectTaskName"></div></td><td><input type="button" class="btn btn-default button-config-list" value="Add" onclick="addTask()" /></td></tr>'
-    taskListHtml += '</tbody></table>';
+	var taskListHtml = '<table class="table table-striped table-hover"><thead><tr><th colspan="2">Tasks</th></tr></thead><tbody>';
+	for(var i in activeTaskGroupConfig.tasks) {
+		taskListHtml += '<tr>';
+		taskListHtml += '<td class="config-table-list-content">'+activeTaskGroupConfig.tasks[i]+'</td>';
+		taskListHtml += '<td><button type="button" class="btn btn-default button-config-list" onclick="removeTaskFromTaskGroup(' + i + ')"><span class="glyphicon glyphicon-trash"></span></button></td>';
+		taskListHtml += '</tr>';
+	}
+	taskListHtml += '<tr><td><div id="divSelectTaskName"></div></td><td><button type="button" class="btn btn-default button-config-list" onclick="addTask()"><span class="glyphicon glyphicon-plus"></span></button></td></tr>';
+	taskListHtml += '</tbody></table>';
 	$("#taskList").html(taskListHtml);
 }
 
@@ -111,8 +110,8 @@ socket.on('removedTaskGroup', function() {
 $(document).ready(function(){
 	$("#taskGroupConfig").hide();
 	$("#saveTaskGroupConfig").click(function() {saveTaskGroupConfig();});
-   	$("#cancelTaskGroupConfig").click(function() {cancelTaskGroupConfig();});
-   	$("#addTask").click(function() {addTask();});
-   	$('#newTaskGroup').click(function() {createNewTaskGroup();});
-   	$('#removeTaskGroup').click(function() {removeTaskGroup();});
+	$("#cancelTaskGroupConfig").click(function() {cancelTaskGroupConfig();});
+	$("#addTask").click(function() {addTask();});
+	$('#newTaskGroup').click(function() {createNewTaskGroup();});
+	$('#removeTaskGroup').click(function() {removeTaskGroup();});
 });

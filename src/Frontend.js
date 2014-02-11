@@ -360,6 +360,10 @@ app.get('/events', function(req, res){
 				});
 			});
 		});
+
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 

@@ -51,15 +51,16 @@ function showFrontpageItemParams() {
 
 function typeChanged() {
 	activeFrontpageConfig.type = document.getElementById("selectType").value;
+	var params;
 
 	if(activeFrontpageConfig.type==='button') {
-		var params = {
+		params = {
 			text : ""
 		};
 		activeFrontpageConfig.params = params;
 	}
 	if(activeFrontpageConfig.type==='onOffSwitch') {
-		var params = {
+		params = {
 			onText : "",
 			offText : "",
 			variable : "",
@@ -69,9 +70,9 @@ function typeChanged() {
 		activeFrontpageConfig.params = params;
 	}	
 	if(activeFrontpageConfig.type==='label') {
-		var params = {
+		params = {
 			variable : ""
-		}
+		};
 		activeFrontpageConfig.params = params;
 	}
 	if(activeFrontpageConfig.type!=='button' && activeFrontpageConfig.type !== 'label' && activeFrontpageConfig.type !== 'onOffSwitch') {
@@ -161,6 +162,6 @@ $(document).ready(function(){
 	$("#saveFrontpageItemConfig").click(function() {saveFrontpageItemConfig();});
 	$("#cancelFrontpageItemConfig").click(function() {cancelFrontpageItemConfig();});
 	$("#removeFrontpageItem").click(function() {removeFrontpageItem();});
-   	$('#newFrontpageItem').click(function() {createNewFrontpageItem();});
+	$('#newFrontpageItem').click(function() {createNewFrontpageItem();});
 	$("#frontpageItemConfig").hide();
 });

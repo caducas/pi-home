@@ -18,9 +18,12 @@ html
 						fieldset
 							legend
 								input(type='text' value='Container-Name' class='form-control config-title-input')#txtName
-								input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancel
-								input(type='button' class='btn btn-default pull-right config-button' value='Save')#save
-								input(type='button' class='btn btn-default pull-right config-button' value='Remove')#remove
+								button(type='button' class='btn btn-default pull-right config-button')#save
+									span(class="glyphicon glyphicon-floppy-disk")
+								button(type='button' class='btn btn-default pull-right config-button')#remove
+									span(class="glyphicon glyphicon-trash")
+								button(type='button' class='btn btn-default pull-right config-button')#cancel
+									span(class="glyphicon glyphicon-arrow-left")
 								&nbsp;
 							div(class='form-group')
 								label(class='col-lg-2 control-label' for='txtDescription') Description

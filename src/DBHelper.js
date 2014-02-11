@@ -235,7 +235,7 @@ function getContainerByName(name, callback) {
 function removeContainer(containerId, callback) {
 	var id = new ObjectID(containerId);
 
-	db.collection('containers').find({_id:configId}).toArray(function(err, docs) {		
+	db.collection('containers').find({_id:id}).toArray(function(err, docs) {		
 		db.collection('sites').find({containers:{$elemMatch:{name:docs[0].name}}}).toArray(function(err, arr) {
 			for(var i in arr) {
 				var containers = arr[i].containers;

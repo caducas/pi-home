@@ -62,8 +62,6 @@ process.on('#changeVariable', function(variable, value) {
 	} catch(err) {
 		console.log('SERVER: Error setting variable ('+err+')');
 	}
-
-
 });
 
 function checkEventForEventGroupsSuccess(catchedEvent) {

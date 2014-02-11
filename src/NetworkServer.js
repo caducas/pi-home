@@ -58,6 +58,14 @@ function sendMessage(recipient,message) {
 	}
 }
 
+process.on('restartClients', function() {
+	var message = {
+		"command" : "restart"
+	};
+	for(var i in clients) {
+		clients[i].sendMessage(message);
+	}
+});
 
 if(typeof exports !== 'undefined') {
 	exports.startServer = startServer;

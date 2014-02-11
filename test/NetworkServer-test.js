@@ -14,11 +14,11 @@ describe('NetworkServer', function(){
 		networkServer.startServer();
 		var client = new JsonSocket(new net.Socket());
 		client.connect(6969, '127.0.0.1', function() {
-		    console.log('CONNECTED client TO: 127.0.0.1:6969');
+			console.log('CONNECTED client TO: 127.0.0.1:6969');
 		});
 
 		process.on('#eventCatched', function(message) {
-			if(!(message.command === "event")) {
+			if(message.command !== "event") {
 				assert(false, "JSON-object has not the correct content");
 			}
 			success = true;

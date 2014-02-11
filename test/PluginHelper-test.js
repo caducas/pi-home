@@ -44,8 +44,9 @@ describe('PluginHelper', function(){
 		//execution
 		var plugin1 = pluginHelper.getPlugin('plugin01');
 		var plugin2 = pluginHelper.getPlugin('plugin02');
+		var plugin3;
 		try {
-			var plugin3 = pluginHelper.getPlugin('plugin03');
+			plugin3 = pluginHelper.getPlugin('plugin03');
 		} catch (err) {
 			error = err;
 		}

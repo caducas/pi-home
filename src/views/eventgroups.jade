@@ -18,9 +18,12 @@ html
                   fieldset  
                      legend
                         input(type='text' value='Eventgroup-Name' class='form-control config-title-input')#txtEventGroupId
-                        input(type='button' class='btn btn-default pull-right config-button' value='Remove')#removeEventGroup
-                        input(type='button' class='btn btn-default pull-right config-button' value='Save')#saveEventGroupConfig
-                        input(type='button' class='btn btn-default pull-right config-button' value='Cancel')#cancelEventGroupConfig
+                        button(type='button' class='btn btn-default pull-right config-button')#saveEventGroupConfig
+                           span(class="glyphicon glyphicon-floppy-disk")
+                        button(type='button' class='btn btn-default pull-right config-button')#removeEventGroup
+                           span(class="glyphicon glyphicon-trash")
+                        button(type='button' class='btn btn-default pull-right config-button')#cancelEventGroupConfig
+                           span(class="glyphicon glyphicon-arrow-left")
                         &nbsp;
                      div(class='form-group')
                      legend Events

@@ -6,6 +6,7 @@
 var net = require('net');
 var JsonSocket = require('json-socket');
 var client;
+var shellExecutor = require('child_process');
 
 /**
 * This method is used to start a client which communicates to a server on given ip address and port.
@@ -42,6 +43,11 @@ function startClient(serverIp, port, onError) {
 		if(message.command==='configEventListeners') {
 			console.log("start listeners command received!");
 			process.emit('#config', message.params);
+		}
+
+		if(message.command==='restart') {
+			var cmd = "./restartClient.sh";
+			shellExecutor.exec(cmd);
 		}
 	});
 
