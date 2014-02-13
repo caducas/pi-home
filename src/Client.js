@@ -22,15 +22,11 @@ networkCommunicator.startClient(ip,port);
 
 //Event for executing a Task (when server sends command to start task)
 process.on('#executeTask', function(task) {
-	console.log("execute task...");
-	console.log(task);
 	taskExecutor.executeTask(task);
 });
 
 //Event for configuration (when server sends command to do the configuration)
 process.on('#config', function(eventConfig) {
-
-	console.log("starts listeners with config");
 
 	eventHelper.startListeners(eventConfig);
 });

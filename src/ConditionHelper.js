@@ -1,5 +1,4 @@
 function checkCondition(value, condition) {
-	console.log("checks condition");
 
 	if(condition.operator==='=') {
 		if(value===condition.value || value.toString() === condition.value.toString()) {

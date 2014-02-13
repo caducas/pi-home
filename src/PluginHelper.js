@@ -55,21 +55,16 @@ function getListOfPlugins() {
 */
 function getPlugin(pluginName) {
 	var plugin;
-	console.log(path+pluginName+'/'+pluginName);
-	console.log('will get plugin now');
 	try {
 		plugin = require(path+pluginName+'/'+pluginName);
 	} catch(err) {
+		console.log('PLUGINHELPER: plugin with path "'+path+pluginName+'/'+pluginName+'" not found');
 		return undefined;
 	}
-	console.log('plugin');
-	console.log(plugin);
 	return plugin;
 }
 
 function getPluginAsync(pluginName, callback) {
-	console.log('should load plugin with name '+pluginName);
-	console.log(path+pluginName+'/'+pluginName);
 	plugin = require(path+pluginName+'/'+pluginName, function(result) {
 		callback(result);
 	});
