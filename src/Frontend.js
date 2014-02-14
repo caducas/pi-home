@@ -89,6 +89,9 @@ app.get('/', function(req, res){
 			});
 		});
 
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 
@@ -145,6 +148,9 @@ app.get('/site', function(req, res) {
 			}
 		});
 
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 
@@ -194,6 +200,10 @@ app.get('/frontpageconfig', function(req, res) {
 			var emptyConfigParams = pluginHelper.getPlugin(type).getEmptyConfigParams();
 			socket.emit('getEmptyConfigParamsResult', emptyConfigParams);
 		});
+
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 
@@ -233,6 +243,10 @@ app.get('/sites', function(req, res) {
 			dbHelper.getContainersList(function(res) {
 				socket.emit('getContainerNames', res);
 			});
+		});
+
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
 		});
 	});
 });
@@ -277,6 +291,10 @@ app.get('/containers', function(req, res) {
 				socket.emit('getElementNames', elementName);
 			});			
 		});
+
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 
@@ -314,6 +332,10 @@ app.get('/tasks', function(req, res){
 					socket.emit('taskIdList', res);
 				});
 			});
+		});
+
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
 		});
 	});
 });
@@ -419,6 +441,9 @@ app.get('/eventgroups', function(req, res){
 			});
 		});
 
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});
 	});
 });
 
@@ -429,42 +454,45 @@ app.get('/taskgroups', function(req, res){
 
 		refreshNavigation(socket);
 
-			dbHelper.getTaskGroupList(function(res) {
-				socket.emit('taskGroupsIdList', res);
+		dbHelper.getTaskGroupList(function(res) {
+			socket.emit('taskGroupsIdList', res);
+		});
+
+		socket.on("getTaskGroupConfig", function(taskGroupId) {
+			dbHelper.getTaskGroupConfig(taskGroupId, function(taskGroupConfig) {
+				socket.emit('getTaskGroupConfigResult', taskGroupConfig);
 			});
+			dbHelper.getUnassignedTaskList(taskGroupId, function(unassignedTaskList) {
+				socket.emit('getUnassignedTaskList', unassignedTaskList);
+			});
+		});
 
-			socket.on("getTaskGroupConfig", function(taskGroupId) {
-				dbHelper.getTaskGroupConfig(taskGroupId, function(taskGroupConfig) {
-					socket.emit('getTaskGroupConfigResult', taskGroupConfig);
-				});
-				dbHelper.getUnassignedTaskList(taskGroupId, function(unassignedTaskList) {
-					socket.emit('getUnassignedTaskList', unassignedTaskList);
+		socket.on("updateTaskGroupConfig", function(taskGroupConfig) {
+			dbHelper.updateTaskGroupConfig(taskGroupConfig, function() {
+				dbHelper.getTaskGroupList(function(res) {
+					socket.emit('taskGroupsIdList', res);
 				});
 			});
+		})
 
-			socket.on("updateTaskGroupConfig", function(taskGroupConfig) {
-				dbHelper.updateTaskGroupConfig(taskGroupConfig, function() {
-					dbHelper.getTaskGroupList(function(res) {
-						socket.emit('taskGroupsIdList', res);
-					});
+		socket.on("updateUnassignedTaskList", function(listToReduceTasks) {
+			dbHelper.getTaskListWithoutTasksGiven(listToReduceTasks, function(taskList) {
+				socket.emit('getUnassignedTaskList', taskList);
+			});
+		});
+
+		socket.on("removeTaskGroup", function(taskGroupId) {
+			dbHelper.removeTaskGroupConfig(taskGroupId, function() {
+				socket.emit('removedTaskGroup');
+				dbHelper.getTaskGroupList(function(res) {
+					socket.emit('taskGroupsIdList', res);
 				});
 			})
+		});
 
-			socket.on("updateUnassignedTaskList", function(listToReduceTasks) {
-				dbHelper.getTaskListWithoutTasksGiven(listToReduceTasks, function(taskList) {
-					socket.emit('getUnassignedTaskList', taskList);
-				});
-			})
-
-			socket.on("removeTaskGroup", function(taskGroupId) {
-				dbHelper.removeTaskGroupConfig(taskGroupId, function() {
-					socket.emit('removedTaskGroup');
-					dbHelper.getTaskGroupList(function(res) {
-						socket.emit('taskGroupsIdList', res);
-					});
-				})
-			})
-			
+		socket.on("restartClients", function() {
+			process.emit('restartClients');
+		});			
 	});
 });
 
