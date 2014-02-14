@@ -12,6 +12,7 @@ function createNewEvent() {
 		"plugin" : "UI",
 		"ip" : "127.0.0.1",
 		"variable" : "",
+		"sendData" : "false",
 		"conditions" : [
 		],
 		"params" : {
@@ -40,6 +41,7 @@ function saveEventListenerConfig() {
 	activeEventConfig.ip = document.getElementById("txtListenerIp").value;
 	activeEventConfig.plugin = document.getElementById("txtListenerPlugin").value;
 	activeEventConfig.variable = document.getElementById("txtListenerVariable").value;
+	activeEventConfig.sendData = document.getElementById("txtListenerSendData").value;
 
 	try {
 		for(var i in activeEventConfig.params) {
@@ -181,6 +183,7 @@ function refreshEventConfig() {
 	document.getElementById("txtListenerIp").value = activeEventConfig.ip;
 	document.getElementById("txtListenerPlugin").value = activeEventConfig.plugin;
 	document.getElementById("txtListenerVariable").value = activeEventConfig.variable;
+	document.getElementById("txtListenerSendData").value = activeEventConfig.sendData;
 
 	$("#eventGroupConfig").show();
 	$("#addNewEvent").hide();

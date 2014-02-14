@@ -35,6 +35,12 @@ html
                         div(class='col-lg-8')
                            input(type='text' id='txtListenerVariable' value='' class='form-control')
                      div(class='form-group')
+                        label(class='col-lg-3 control-label' for='txtListenerSendData') Send Plugin Data
+                        div(class='col-lg-8')
+                           select(class='form-control' id='txtListenerSendData' size='1')
+                              option(value='true') true
+                              option(value='false') false
+                     div(class='form-group')
                         label(class='col-lg-3 control-label' for='txtListenerPlugin') Plugin
                         div(class='col-lg-8')
                            div#plugin
