@@ -46,8 +46,9 @@ function startClient(serverIp, port, onError) {
 		}
 
 		if(message.command==='restart') {
-			var cmd = "./restartClient.sh";
-			shellExecutor.exec(cmd);
+			var path = __dirname + '/restartClient.sh';
+			console.log("NETWORKCLIENT: will restart Client using "+path);
+			shellExecutor.exec(path);
 		}
 	});
 
