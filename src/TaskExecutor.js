@@ -16,6 +16,9 @@ function executeTask(taskConfig) {
 
 	var plugin = pluginHelper.getPlugin(taskConfig.plugin);
 
+	console.log("TASKEXECUTOR: Execute task using plugin "+taskConfig.plugin + " with params: ");
+	console.log(taskConfig.params);
+
 	plugin.execute(taskConfig.params);
 }
 

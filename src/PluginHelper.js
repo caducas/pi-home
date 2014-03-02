@@ -59,6 +59,7 @@ function getPlugin(pluginName) {
 		plugin = require(path+pluginName+'/'+pluginName);
 	} catch(err) {
 		console.log('PLUGINHELPER: plugin with path "'+path+pluginName+'/'+pluginName+'" not found');
+		console.log(err);
 		return undefined;
 	}
 	return plugin;

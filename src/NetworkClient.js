@@ -36,7 +36,6 @@ function startClient(serverIp, port, onError) {
 	client.on('message', function(message) {
 
 		if(message.command==='executeTask') {
-			console.log("execute task:");
 			process.emit('#executeTask', message.params);
 		}
 

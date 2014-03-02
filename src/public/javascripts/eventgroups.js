@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 function createNewEventGroup() {
 	activeEventGroupConfig = {
-			eventGroupId : "",
+			eventGroupId : "Eventgroup-Name",
 			events : [],
 			taskGroups : []
 	};
@@ -120,7 +120,6 @@ function addEvent() {
 	activeEventGroupConfig.events.push(newEvent);
 
 	refreshEventList();
-	showEventGroupConfig();
 }
 
 function addTaskGroup() {
